@@ -33,6 +33,9 @@ const TAG: string = 'WebBuilder';
 struct weexWeb {
   @ObjectLink builderData: BuilderData
   @State componentIdArr: Array<string> = []
+  needRenderWhenVisible: boolean = false;
+  maxRetries: number = 10 //按需设置最大重试次数
+  currentRetryNum: number = 0 //按需设置当前次数
 
   aboutToAppear(): void {
     webview.WebviewController.setWebDebuggingAccess(true);
@@ -148,6 +151,23 @@ struct weexWeb {
               })
             }
             Logger.info(TAG, '[WEB] : onControllerAttached');
+          })
+          .onRenderExited((event) => {
+            if (!event) {
+              return;
+            }
+            console.log(TAG, `onRenderExited ${event.renderExitReason.toString()} ,current:${this.currentRetryNum}`);
+            if (this.currentRetryNum > this.maxRetries) {
+              //按需---设置重试次数上限保护
+              return;
+            }
+            console.log(TAG, `onRenderExited retry2`);
+            this.currentRetryNum++;
+            if (this.builderData.controller.getUrl()) {
+              this.builderData.controller.loadUrl(this.builderData.controller.getUrl());
+            } else {
+              return;
+            }
           })
       }
     }

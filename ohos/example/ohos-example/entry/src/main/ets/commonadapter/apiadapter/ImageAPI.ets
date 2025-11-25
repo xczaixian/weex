@@ -110,11 +110,8 @@ export class ImageAPI {
             let that: util.Base64Helper = new util.Base64Helper();
             let array: Uint8Array = new Uint8Array(buf.slice(0, readLen));
             let result: Uint8Array = that.encodeSync(array);
-            let arrayData: number[] = Array.from(result);
-            let str: string = '';
-            for (let index: number = 0; index < arrayData.length; index++) {
-              str += String.fromCharCode(arrayData[index]);
-            }
+            let textDecoder: util.TextDecoder = util.TextDecoder.create();
+            let str: string = textDecoder.decodeToString(result,{stream:true})
             base64Data.push(str)
             fs.closeSync(file);
           } catch (err) {

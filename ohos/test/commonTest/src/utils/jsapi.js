@@ -25,7 +25,7 @@ const globalEvent = weex.requireModule('globalEvent');
 let wx = {};
 if (isInWeixin) {
   wx = require('weixin-js-sdk');
-  const url = `https://www.umetrip.com/weixinrobotmsg/weixin/api/jssignature.do?url=${encodeURIComponent(
+  const url = `http://localhost:8080?url=${encodeURIComponent(
     window.location.href,
   )}`;
   fetch('get', url, {}, {}, {}, { useUrlBase: false, isResolveAll: true }).then(
@@ -110,6 +110,36 @@ export function updateWeexPackage(param) {
     });
   });
 }
+
+/**
+ * download下载
+ * @param {object} param
+ * @param {string} param.url 下载地址
+ * @param {string} param.fileType 文件类型
+ * @returns 
+ */
+export function downLoadTask(param) {
+  return new Promise((resolve, reject) => {
+    callNative('downloadTask', param, (res) => {
+      handleResult(resolve, reject, res)
+    })
+  })
+}
+
+/**
+ * 保存视屏至相册
+ * @param {object} param 
+ * @param {string} param.url 视频地址
+ * @returns 
+ */
+export function saveVideoToPhotosAlbum(param) {
+  return new Promise((resolve, reject) => {
+    callNative('saveVideoToPhotosAlbum', param, (res) => {
+      handleResult(resolve, reject, res)
+    })
+  })
+}
+
 /**
  * 删weex包
  * @param {object} param
@@ -353,7 +383,7 @@ export function callUp({ phoneNumber = '', isModal = 1, tipWords = '' }) {
  * {status:number, statusMessage:string}
  * @version h5(and_5.0.10;ios_5.0.10);weex(and_5.0.10;ios_5.0.10)
  */
- export function updateRes() {
+export function updateRes() {
   console.log('building jsapi.js updateRes');
   return new Promise((resolve, reject) => {
     console.log('building jsapi.js updateRes callNative');
@@ -531,7 +561,7 @@ export async function uploadImage(imgList, source, moduleName, vm = {}) {
     if (!fileInfos[i].getFileByFid) {
       fileInfos[
         i
-      ].getFileByFid = `http://img.umetrip.com/fs/${moduleName}/${fileInfos[i].fid}`;
+      ].getFileByFid = `http://localhost:8080/fs/${moduleName}/${fileInfos[i].fid}`;
     }
     fidList[i] = fileInfos[i];
   }
@@ -602,7 +632,7 @@ export async function h5Upload(base64Image, source, moduleName, vm) {
   formData.append('file', blobData);
   // let url = 'http://10.237.78.78:8180/UmeImageMagic/api/fileSystem/uploadFile'
   const url =
-    'https://img.umetrip.com/jboss/UmeImageMagic/api/fileSystem/uploadFile';
+    'http://localhost:8080/jboss/UmeImageMagic/api/fileSystem/uploadFile';
   return new Promise((resolve, reject) => {
     window
       .fetch(url, {
@@ -938,18 +968,18 @@ export function nativeSlider(isLip, cb) {
       }
     } else if (isIos) {
       // ios
-      callNative('noSlider', { isLip }, () => {});
+      callNative('noSlider', { isLip }, () => { });
     }
   } else if (isWeb && isInUmeApp) {
     if (h5Ios) {
-      callNative('noSlider', { isLip }, () => {});
+      callNative('noSlider', { isLip }, () => { });
     }
     registerService('onBack', (data, nativeFn) => {
       nativeFn(isLip ? 0 : 1);
       // this.returnType = data;
       if (!isLip && cb && typeof cb === 'function') cb();
     });
-    callNative('h5Service', { serviceName: isLip ? [] : ['onBack'] }, () => {});
+    callNative('h5Service', { serviceName: isLip ? [] : ['onBack'] }, () => { });
   }
 }
 
@@ -959,7 +989,7 @@ export function nativeSlider(isLip, cb) {
 export function getReqHeader() {
   const p1 = new Promise((resolve, reject) => {
     if (isNative || isInUmeApp) {
-      callNative('getReqHeader', {}, (r) => {
+      callNative('getSystemInfo', {}, (r) => {
         let result = r;
         // 经测试，这个异步api一般在100ms以内
         try {
@@ -969,9 +999,9 @@ export function getReqHeader() {
           const data = result.data || {};
           xlog.log(`从客户端取出来的版本信息: ${JSON.stringify(data)}`);
           // 手动注入version解析出来的版本号
-          const rcver = data.rcver || '';
-          const version = rcverToNumber(rcver);
-          data.version = version;
+          // const rcver = data.rcver || '';
+          // const version = rcverToNumber(rcver);
+          // data.version = version;
           resolve(data);
         } catch (error) {
           reject(error);
@@ -1275,12 +1305,12 @@ export async function setAutoFullscreenNew(
     fullHeight = env.visibleScreenHeight * scale || env.deviceHeight * scale;
     xlog.log(1, 'weex', statusbarHeight, bottomHeight, fullHeight);
   } else if (isInUmeApp) {
-    // 【2 航旅h5】
+    // 【2 h5】
     // 降级或打开200200。可以从ua取
     /**
      * navigator.userAgent = Mozilla/5.0 (Linux; Android 10; PCT-AL10
      * Build/HUAWEIPCT-AL10; wv) AppleWebKit/537.36 (KHTML, like Gecko)
-     * Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36;UmeTrip
+     * Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36;
      * AND_a01_07.19.1102;statusbarHeight=34&bottomHeight=0&screenHeight=770;
      */
     // 先从 navigator.userAgent 取

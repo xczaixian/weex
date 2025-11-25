@@ -22,11 +22,11 @@ export class DeviceAPI {
     const name = options.name;
     let successCB = (data: SystemInfoResult) => {
       console.info('WANG get taro ReqHeader:ok')
-      completeCb(new WeexResult<CallbackData>(StatusCode.SUCCESS, '获取成功', new CallbackData('', '', data.brand ?? '', data.system ?? '')));
+      completeCb(new WeexResult<CallbackData>(StatusCode.SUCCESS, '获取成功', new CallbackData(data.version ?? '', '', data.brand ?? '', data.system ?? '')));
     };
     let failCB = (data: SystemInfoResult) => {
       console.info('WANG get taro ReqHeader:fail');
-      completeCb(new WeexResult<CallbackData>(StatusCode.FAIL, '获取失败', new CallbackData('', '', data.brand ?? '', data.system ?? '')));
+      completeCb(new WeexResult<CallbackData>(StatusCode.FAIL, '获取失败', new CallbackData(data.version ?? '', '', data.brand ?? '', data.system ?? '')));
     };
 
     let params: Array<CommonCallback> = new Array();

@@ -2,6 +2,7 @@ import { interceptCallback } from '../callback/callback-intercept'
 import JSCallback, { jsCallbackMap } from '../callback/JSCallback'
 
 import {
+  getSystemInfo,
   getSystemInfoSync,
   getDeviceInfo,
   getWindowInfo,
@@ -109,6 +110,7 @@ import { scanCode } from '../as/scan/scan'
  */
 export const asInterfaceList = {
   // 设备系统
+  getSystemInfo: { method: getSystemInfo },
   getSystemInfoSync: { method: getSystemInfoSync, needPromise: false, needCallback: false },
   getDeviceInfo: { method: getDeviceInfo, needPromise: false },
   getWindowInfo: { method: getWindowInfo, needPromise: false },

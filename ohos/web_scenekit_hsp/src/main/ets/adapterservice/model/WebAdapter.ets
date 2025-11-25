@@ -20,8 +20,11 @@ import { Navigator } from '../api/Navigator';
 import { UpdateApi } from '../api/UpdateApi';
 import { sameLayerManager } from '../../samelayer/SameLayerManager';
 import { ViewAppear } from '../api/ViewAppear';
+import { ChannelMessage } from '../api/BroadCastChannelAPI';
 import { StreamAPI } from '../api/StreamAPI';
 import { offKeyboard, onKeyboard } from '../api/KeyboardAPI';
+import { AccountAPI } from '../api/AccountAPI';
+import { WebManager } from '../../webrouterservice/webmanger/WebManager';
 
 const TAG: string = 'WebAdapter';
 
@@ -36,6 +39,11 @@ const advancedAPIs = new Map<string, Function>([
   ['onUpdateFailed', new UpdateApi().onUpdateFailed],
   ['onKeyboard', onKeyboard],
   ['offKeyboard', offKeyboard],
+  ['quickLoginAnonymousPhone', new AccountAPI().quickLoginAnonymousPhone],
+  ['channelPostMessage', ChannelMessage.getInstance().channelPostMessage],
+  ['channelOnMessage', ChannelMessage.getInstance().channelOnMessage],
+  ['channelCloseMessage', ChannelMessage.getInstance().channelCloseMessage],
+  ['runpostMessageCallback', ChannelMessage.getInstance().runpostMessageCallback],
 ])
 
 const advancedCbStringifyAPIs = new Set<string>([
@@ -151,15 +159,38 @@ export class WebAdapter {
     }
 
     let advancedAPI: Function | undefined = advancedAPIs.get(name);
-    if(advancedAPI){
-      advancedAPI({
-        name,
-        args: argsString,
-        successCb: null,
-        failCb: null,
-        completeCb: completeCB,
-        webId: webId
-      });
+    if (advancedAPI) {
+      if (WebManager.getInstance().isPreRenderWeb(webId) && WebManager.getInstance().getDelayExecuteName() &&
+      WebManager.getInstance().getDelayExecuteName()?.includes(name) &&
+        !WebManager.getInstance().getIsForeground(webId)) {
+        let advancedAPI_copy = advancedAPI
+        const method: Function = () => {
+          advancedAPI_copy({
+            name,
+            args: argsString,
+            successCb: null,
+            failCb: null,
+            completeCb: completeCB,
+            webId: webId
+          })
+        }
+        let methods: Array<Function> = WebManager.getInstance().getDelayExecute(webId) as Array<Function>
+        if (!methods) {
+          WebManager.getInstance().setDelayExecute(webId, [method])
+        } else {
+          WebManager.getInstance().setDelayExecute(webId, [...methods, method])
+        }
+      } else {
+        advancedAPI({
+          name,
+          args: argsString,
+          successCb: null,
+          failCb: null,
+          completeCb: completeCB,
+          webId: webId
+        });
+      }
     }
+
   }
 }

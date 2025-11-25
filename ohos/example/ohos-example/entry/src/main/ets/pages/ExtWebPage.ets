@@ -12,6 +12,8 @@
 
 import { ExtWeb } from 'WebSceneKitHsp';
 import router from '@ohos.router';
+import { RouterStorage } from 'WebSceneKitHsp'
+import { GlobalRouter } from 'WebSceneKitHsp/src/main/ets/webrouterservice/globalrouter/GlobalRouter';
 
 interface routerParam {
   url: string
@@ -20,6 +22,7 @@ interface routerParam {
 @Entry
 @Component
 struct ExtWebPage {
+  @StorageLink('isOnForeground') isOnForeground: boolean = true;
   url: string = "";
   aboutToAppear() {
     if (router.getParams()) {
@@ -28,8 +31,10 @@ struct ExtWebPage {
   }
 
   build() {
-    Column() {
-      ExtWeb({ url: this.url, asMixWeb: false })
-    }.height('100%')
+    NavDestination() {
+      Column() {
+        ExtWeb({ url: this.url, asMixWeb: false, isOnForeground: this.isOnForeground })
+      }.height('100%')
+    }
   }
 }

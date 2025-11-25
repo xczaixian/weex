@@ -536,7 +536,7 @@ export default {
     },
     getData(isFirst = true, data = {}) {
       const path =
-        'https://www.umetrip.com/gateway/api/web/flightstatus/flightstatus/getairportlist';
+        '';
       const { latitude, longitude } = data;
       const params = {};
       const timestamp = new Date().getTime();

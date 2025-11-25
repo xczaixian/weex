@@ -20,6 +20,12 @@
         <text class="btn" @click="broadcastOnmessage()">广播监听</text>
         <text class="btn" @click="broadcastClose()">关闭广播</text>
       </div>
+          <div class="btn-group">
+        <text class="font-title">broadcastChannel native</text>
+        <text class="btn" @click="broadcastPostNative()">广播发送</text>
+        <text class="btn" @click="broadcastOnmessageNative()">广播监听</text>
+        <text class="btn" @click="broadcastCloseNative()">关闭广播</text>
+      </div>
       <div class="btn-group">
         <text class="font-title">输入框</text>
         <input>
@@ -34,11 +40,52 @@ import { pushPage } from "@/utils/index.js";
 const modal = weex.requireModule('modal');
 const testbc = new BroadcastChannel('testbc');
 const globalEvent = weex.requireModule('globalEvent');
+const weexModule = weex.requireModule('weexModule');
 
 export default {
   components: {},
   data() {},
   methods: {
+     callback(val) {
+      console.log("ChannelMessage multiPage1 broadcastPostNative callback", JSON.stringify(val));
+    },
+    broadcastPostNative() {
+      const paramPost = {
+        type: "demo",
+        data: {
+          name: "multiPage1",
+          age: 18,
+        },
+      };
+      weexModule.callNative("channelPostMessage", paramPost, this.callback);
+    },
+    broadcastOnmessageNative() {
+      const paramOnMessage = {
+        type: "demo",
+        callback: true,
+      };
+      const callbackOnMessage = (val) => {
+        console.log(
+          "ChannelMessage entry multiPage1 broadcastOnmessageNative callback !!!!",
+          JSON.stringify(val)
+        );
+        let paramCallback = {
+          type: "demo",
+          params: {
+            name: "multiPage1",
+            age: 21,
+          },
+        };
+        weexModule.callNative("runpostMessageCallback", paramCallback);
+      };
+      weexModule.callNative("channelOnMessage", paramOnMessage, callbackOnMessage);
+    },
+    broadcastCloseNative() {
+      const paramClose = {
+        type: "demo",
+      };
+      weexModule.callNative("channelCloseMessage", paramClose);
+    },
     jumpPage(page, params = {}) {
       let newParams = params;
       pushPage(page, newParams);

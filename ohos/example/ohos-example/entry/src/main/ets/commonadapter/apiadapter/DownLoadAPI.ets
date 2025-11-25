@@ -38,7 +38,7 @@ export class DownLoadAPI {
     let params: Array<DownloadCallback> = new Array();
     params[0] = new DownloadCallback();
     params[0].url = argsObj.url ?? '';
-    params[0].filePath = context.filesDir + filename + (argsObj.fileType ? argsObj.fileType : '');
+    params[0].filePath = context.filesDir + filename + (argsObj.fileType ? `.${argsObj.fileType}` : '');
     params[0].success = downloadTaskSuccessCB;
     params[0].fail = downloadTaskFailCB;
     as['downloadFile'].apply(null, params)

@@ -5,6 +5,7 @@
       <div class="btn-group">
         <text class="font-title">navigator</text>
         <text class="btn" @click="jumpPage('singlePage6')">push(singlePage6)</text>
+         <text class="btn" @click="jumpPage('singlePage3')">push(singlePage3)</text>
         <text class="btn" @click="navigatorPop()">pop</text>
       </div>
       <div class="btn-group">
@@ -17,10 +18,18 @@
 
 <script>
 import { pushPage } from "@/utils/index.js";
+const weexModule = weex.requireModule("weexModule");
 
 export default {
   components: {},
   data() {},
+    beforeCreate() {
+    console.log("entry singlePage2 window.prerendering !!!!!!!!!");
+    weexModule.callNative("BarStyle", {
+      statusBarColor: "#E5FFFFFF",
+      statusBarContentColor: "#00FF00",
+    });
+  },
   methods: {
     jumpPage(page, params = {}) {
       let newParams = params;

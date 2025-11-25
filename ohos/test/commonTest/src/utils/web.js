@@ -7,13 +7,13 @@ const stream = weex.requireModule('stream');
 const globalVar = GLOBAL_VAR || {};
 const apiEnv = globalVar.apiEnv || 'prod';
 let urlBase = {
-  // development: 'http://dev.umetrip.com/gateway/api/web/',
-  development: 'https://gray.umetrip.com/gateway/api/web/',
-  // development: 'https://www.umetrip.com/gateway/api/web/'
+  // development: 'http://dev.test.com/gateway/api/web/',
+  development: 'https://gray.test.com/gateway/api/web/',
+  // development: 'https://www.test.com/gateway/api/web/'
   production: {
-    dev: 'http://dev.umetrip.com/gateway/api/web/',
-    gray: 'https://gray.umetrip.com/gateway/api/web/',
-    prod: 'https://www.umetrip.com/gateway/api/web/',
+    dev: 'http://dev.test.com/gateway/api/web/',
+    gray: 'https://gray.test.com/gateway/api/web/',
+    prod: 'https://www.test.com/gateway/api/web/',
   },
 };
 urlBase =
@@ -236,7 +236,7 @@ export function fetch(
 //   formData.append('file', blobData);
 //   // let url = 'http://10.237.78.78:8180/UmeImageMagic/api/fileSystem/uploadFile'
 //   const url =
-//     'https://img.umetrip.com/jboss/UmeImageMagic/api/fileSystem/uploadFile';
+//     'http://localhost:8080/jboss/UmeImageMagic/api/fileSystem/uploadFile';
 //   return new Promise((resolve, reject) => {
 //     window
 //       .fetch(url, {

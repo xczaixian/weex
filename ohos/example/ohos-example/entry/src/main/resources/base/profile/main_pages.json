@@ -4,6 +4,10 @@
     "pages/ApiAndComponent",
     "pages/Second",
     "pages/Third",
-    "pages/ExtWebPage"
+    "pages/ExtWebPage",
+    "pages/ExtWebPage1",
+    "pages/NativePage",
+    "pages/NativePage1",
+    "pages/mixWebList"
   ]
 }

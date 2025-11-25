@@ -106,7 +106,7 @@ export default {
       speed:1,
       lottieLoop: true,
       lottieAutoPlay: true,
-      sourceUrl: 'https://gray.umetrip.com/assets/json/car_order_animation.json',
+      sourceUrl: '',
       placeholder: "请输入...",
       textAreaArgs: {
         backgroundColor: "#ff60cb42",

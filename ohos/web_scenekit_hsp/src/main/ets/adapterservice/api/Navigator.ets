@@ -21,11 +21,9 @@ const TAG: string = 'Navigator';
 
 export class Navigator {
   static pop(args: object, callback: Function, webId: number): void {
-    // 在该页面回退到上一个页面之前，先执行该页面的 viewdisappear 事件
-    ViewAppear.execAppearByCurrentPage(webId, Constants.VIEW_DIS_APPEAR_TYPE)
     let popNum: number = args['popNum'] ?? 1;
     let animated: boolean = args['animated'] ?? true;
-    GlobalRouter.getInstance().onBackPress(popNum, animated);
+    GlobalRouter.getInstance().onBackPress(popNum, animated, webId);
     if(callback){
       callback(Constants.SUCCEED);
     }

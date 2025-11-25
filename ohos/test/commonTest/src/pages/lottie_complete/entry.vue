@@ -42,9 +42,6 @@ export default {
       status2: 'play',
       sourceJson: JSON.stringify(data),
       sourceJson2: JSON.stringify(calender),
-      // sourceUrl: 'https://gray.umetrip.com/assets/json/car_order_animation.json',
-      sourceUrl2:
-        'http://img.umetrip.com/fs/serviceRecommend/static/149,115761b771bc7e31',
       speed: '',
       loop: true,
       resizeMode: 'cover',

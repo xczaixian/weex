@@ -51,6 +51,74 @@ export class WebManager {
   public  templateNeed: number = -1;
   private minimumThreshold: number = 1;
   private webTaskMap: Map<string, Function> = new Map();
+  private delayExecuteName: Array<string> | undefined;
+  private delayExecute: Map<number, Array<Function>> = new Map();
+  private isForeground: Map<number, boolean> = new Map();
+
+
+  /**
+   *
+   * @param delayExecuteName
+   */
+  public setDelayExecuteName(val: Array<string>): void {
+    this.delayExecuteName = val;
+  }
+
+  /**
+   *
+   * @returns delayExecuteName
+   */
+  public getDelayExecuteName(): Array<string> | undefined {
+    return this.delayExecuteName;
+  }
+
+  /**
+   *
+   * @param DelayExecute
+   */
+  public setDelayExecute(webId: number, method: Array<Function>): void {
+    this.delayExecute.set(webId, method);
+  }
+
+  /**
+   *
+   * @returns
+   */
+  public getDelayExecute(webId: number): Array<Function> | undefined {
+    return this.delayExecute.get(webId);
+  }
+
+  /**
+   *
+   * @returns
+   */
+  public clearDelayExecute(webId: number) {
+    this.delayExecute.delete(webId);
+  }
+
+  /**
+   *
+   * @param IsForeground
+   */
+  public setIsForeground(webId: number, isappear: boolean): void {
+    this.isForeground.set(webId, isappear);
+  }
+
+  /**
+   *
+   * @returns Boolean
+   */
+  public getIsForeground(webId: number): boolean | undefined {
+    return this.isForeground.get(webId);
+  }
+
+  /**
+   *
+   * @returns
+   */
+  public clearIsForeground(webId: number) {
+    this.isForeground.delete(webId);
+  }
 
   /**
    * Singleton mode get instance.

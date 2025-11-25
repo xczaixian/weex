@@ -68,7 +68,7 @@ function setupWebViewJavascriptBridge(callback) {
         // alert('WebViewJavascriptBridgeReady初始化错误')
       }
     } else {
-      // alert("请在航旅纵横中打开链接")
+      // alert("请在应用中打开链接")
     }
   }
 
@@ -98,7 +98,7 @@ function setupWebViewJavascriptBridge(callback) {
         // alert('WebViewJavascriptBridgeReady初始化错误')
       }
     } else {
-      // alert('请在航旅纵横中打开链接')
+      // alert('请在应用中打开链接')
     }
 
     function register(api_name, callback) {

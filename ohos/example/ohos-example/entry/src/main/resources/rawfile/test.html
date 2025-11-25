@@ -1,0 +1,346 @@
+<!-- MainPage.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <meta charset="utf-8">
+    <title>testApp</title>
+</head>
+<script>
+    function weex_chooseContact() {
+        let weexModule = weex.requireModule('weexModule')
+        weexModule.callNative('chooseContact',{},(res)=>{
+            console.log('chooseContact res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_getLocalIPAddress() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative('getLocalIPAddress',{},(res)=>{
+            console.log('weex_getLocalIPAddress html res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_saveVideoToPhotosAlbum() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative('saveVideoToPhotosAlbum',{'filePath' : '/data/storage/el2/base/haps/entry/files/VID_1697591919_000.mp4'},(res)=>{
+            console.log('weex_saveVideoToPhotosAlbum html res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_saveImgsToAlbum() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative(
+            'saveImgsToAlbum',
+            {
+                'imgArray' : [
+                    'iVBORw0KGgoAAAANSUhEUgAAAMIAAACPCAYAAACoJwSDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPlSURBVHhe7dtBauNaEIbRrCsLynqyGm0mi1HXtQtc6L56CDSxrs+BQJf51LMfe6KvHdgNAYIhQDAECGUIf/v2+7N/f33vv3/50USjyY8md2xeHkP42+KB75/9d/vbf7//+0GNZqXmaPppdOZBTR4NTR6Nd2sGQyg0eTRWbQZDKDR5NFZtBkMoNHk0Vm0GQyg0eTRWbQZDKDR5NFZthucQtp/96+tr+vuu/4NGs1JzMH0jwCcyBAiGAMEQIBgCBEOAYAgQDAGCIUAoQ7jjG0YaTX40OdO8PIZwxzeMNJorzdH00+jMg5o8Gpo8Gu/WDIZQaPJorNoMhlBo8mis2gyGUGjyaKzaDIZQaPJorNoMhlBo8mis2gzPIWw3fMNIo7nSHEzfCPCJDAGCIUAwBAiGAMEQIBgCBEOAYAgQyhDu+IaRRpMfTc40L48h3PENI43mSnM0/TQ686Am/vE/NHk03q0ZDKHQ5NFYtRkModDk0Vi1GQyh0OTRWLUZDKHQ5NFYtRkModDk0Vi1GZ5D2G74hpFGc6U5mL4R4BMZAgRDgGAIEAwBgiFAMAQIhgDBECCUIdzxDSONJj+anGleHkO44xtGGs2V5mj6aXTmQU0eDU0ejXdrBkMoNHk0Vm0GQyg0eTRWbQZDKDR5NFZtBkMoNHk0Vm0GQyg0eTRWbYbnELYbvmGk0VxpDqZvBPhEhgDBECAYAgRDgGAIEAwBgiFAMAQIZQh3fMNIo8mPJmeal8cQ7viGkUZzpTmafhqdeVCTR0OTR+PdmsEQCk0ejVWbwRAKTR6NVZvBEApNHo1Vm8EQCk0ejVWbwRAKTR6NVZvhOYTthm8YaaY/TTrTHEzfCPCJDAGCIUAwBAiGAMEQIBgCBEOAYAgQyhDu+IaRRpMfTc40L48h3PENI43mSnM0/TQ686Amj4Ymj8a7NYMhFJo8Gqs2gyEUmjwaqzaDIRSaPBqrNoMhFJo8Gqs2gyEUmjwaqzbDcwjbDd8w0miuNAfTNwJ8IkOAYAgQDAGCIUAwBAiGAMEQIBgChDKEO75hpNHkR5MzzctjCHd8w0ijudIcTT+NzjyoyaOhyaPxbs1gCIUmj8aqzWAIhSaPxqrNYAiFJo/Gqs1gCIUmj8aqzWAIhSaPxqrN8BzCdsM3jDSaK83B9I0An8gQIBgCBEOAYAgQDAGCIUAwBAiGAKEM4Y5vGGk0+dHkTPPyGMId3zDSaK40R9NPozMPavJoaPJovFszGEKhyaOxajMYQqHJo7FqMxhCocmjsWozGEKhyaOxajMYQqHJo7FqMzyHsN3wDSON5kpzMH0jwCcyBAiGAMEQYN/3f6qRRF6Ij70xAAAAAElFTkSuQmCC',
+                    'iVBORw0KGgoAAAANSUhEUgAAAMEAAACNCAYAAAAO2B6LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUFSURBVHhe7ZtBkqswDAVzLg6U88xpuEwOwxcGGUNZPy6yEq+7KgvPNMsuSon1WgDEIQKQhwhAnhrBZ34v0+u1vNbP9F7+Pvs/GnBwnuQ4WwSfP3tgquJnPp8LODjr8SlOQ4lgfk/Ley7nyvx+nf6Gsx92cPaDkdFpCWaCeXlPcTkbODgRuZxOBJ/lzx6IqtnAwYnI55wj+AxUhYMTkdExagRlmrYpev7PAzg4ERkdpw7Gk70vWr83bOAc4OwHI6PTYhHYK8O/T718jodwcJ7knOkMxgBaEAHIQwQgDxGAPEQA8hAByEMEIA8RgDxEAPLUCMpdC/91bcqxGYSD84vjbBFk3AzCwVmPd52GEsF64eh6r6J3KQnnAGc/GBmdlmAmmAfuYePgRORyOhHk2wzCwYn57pwjyLgZhIMTMeIYNYIyTdsUnWkzCAcnYsRx6mCcbTMIB8e547RYBPbK8O9TL5/jIRycJzlnOoMxgBZEAPIQAchDBCAPEYA8RADyEAHIQwQgDxGAPDWCctfCf12bcmwG4eD84jhbBBk3g3Bw1uNdp6FEsF44ut6r6F1KwjnA2Q9GRqclmAnmgXvYODgRuZxOBPk2g3BwYr475wgybgbh4ESMOEaNoEzTNkVn2gzCwYkYcZw6GGfbDMLBce44LRaBvTL8+9TL53gIB+dJzpnOYAygBRGAPEQA8hAByEMEIA8RgDxEAPIQAchDBCBPjaDctfBf16Ycm0E4OL84zhZBxs0gHJz1eNdpKBGsF46u9yp6l5JwDnD2g5HRaQlmgnngHjYOTkQupxNBvs0gHJyY7845goybQTg4ESOOUSMo07RN0Zk2g3BwIkYcpw7G2TaDcHCcO06LRWCvDP8+9fI5HsLBeZJzpjMYA2hBBCAPEYA8RADyEAHIQwQgDxGAPEQA8hAByFMjKHct/Ne1KcdmEA7OL46zRZBxMwgHZz3edRpKBOuFo+u9it6lJJwDnP1gZHRagplgHriHjYMTkcvpRJBvMwgHJ+a7c44g42YQDk7EiGPUCMo0bVN0ps0gHJyIEcepg3G2zSAcHOeO02IR2CvDv0+9fI6HcHCe5JzpDMYAWhAByEMEIA8RgDxEAPIQAchDBCAPEYA8RADy1AjKXQv/dW3KsRmEg/OL42wRZNwMwsFZj3edhhLBeuHoeq+idykJ5wBnPxgZnZZgJpgH7mHj4ETkcjoR5NsMwsGJ+e6cI8i4GYSDEzHiGDWCMk3bFJ1pMwgHJ2LEcepgnG0zCAfHueO0WAT2yvDvUy+f4yEcnCc5ZzqDMYAWRADyEAHIQwQgDxGAPEQA8hAByEMEIA8RgDw1gnLXwn9dm3JsBuHg/OI4WwQZN4NwcNbjXaehRLBeOLreq+hdSsI5wNkPRkanJZgJ5oF72Dg4EbmcTgT5NoNwcGK+O+cIMm4G4eBEjDhGjaBM0zZFZ9oMwsGJGHGcOhhn2wzCwXHuOC0Wgb0y/PvUy+d4CAfnSc6ZzmAMoAURgDxEAPIQAchDBCAPEYA8RADyEAHIQwQgT42g3LXwX9emHJtBODi/OM4WQcbNIByc9XjXaSgRrBeOrvcqepeScA5w9oOR0WkJZoJ54B42Dk5ELqcTQb7NIBycmO/OOYKMm0E4OBEjjlEjKNO0TdGZNoNwcCJGHKcOxtk2g3BwnDtOi0Vgrwz/PvXyOR7CwXmSc6YzGANoQQQgDxGAOMvyD+XEEg2szZx5AAAAAElFTkSuQmCC',
+                    'iVBORw0KGgoAAAANSUhEUgAAAMAAAACLCAYAAAA3Q5aoAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUgSURBVHhe7ZvBbeQwDAC3ri3I9aSabSbF+EQdYVtnkQa0Dx3FGSAPJZPnQBIsvnaAxBAApKYJ4Pfzs2/v1/56yc973z76hws4OCs5ZwCfbX+9t/3z+3cp//wu//Sj6woOTmEZp+AegT7bq1vNFRxdGODowmC2Ywfw+9m3TjENODgWQZx7ALJ16JnpxyoKB2cRx98B3uWfnqrCscH57x33DlDreT5Y4Xjg6MJgsnMEIBeEd/njEUgtpvzukgwOTmURR2h2gM/Ptr/reenvmWn7RxZwcFZy/CMQwOIQAKSGACA1BACpIQBIDQFAaggAUkMAkBoCgNQ0AcjQgHwuPr6cdZ5W4OCs5JwByEOhaBM9ODiFYafgHoHkQVGvmis4ujDA0YXBbMcOQF7PdYppwMGxCOLcA5CtQ89MESZ6Kjg4g46/AwSY6GnAwbEwHPcOUOt5PljheODowmCycwQgF4RoEz04OJVBR2h2gIgTPTg43zj+EQhgcQgAUkMAkBoCgNQQAKSGACA1BACpIQBIDQFAapoAZGhAPhcfX846TytwcFZyzgDkoVC0iR4cnMKwU3CPQPKgqFfNFRxdGODowmC2Ywcgr+c6xTTg4FgEce4ByNahZ6YIEz0VnPKD0+XB8XeAABM9DTg4Fobj3gFqPc8HKxwPHF0YTHaOAOSCEG2iBwenMugIzQ4QcaIHB+cbxz8CASwOAUBqCABSQwCQGgKA1BAApIYAIDUEAKkhAEhNE4AMDcjn4uPLWedpBQ7OSs4ZgDwUijbRg4NTGHYK7hFIHhT1qrmCowsDHF0YzHbsAOT1XKeYBhwciyDOPQDZOvTMFGGip4KDM+j4O0CAiZ4GHBwLw3HvALWe54MVjgeOLgwmO0cAckGINtGDg1MZdIRmB4g40YOD843jH4EAFocAIDUEAKkhAEgNAUBqCABSQwCQGgKA1BAApKYJQIYG5HPx8eWs87QCB2cl5wxAHgpFm+jBwSkMOwX3CCQPinrVXMHRhQGOLgxmO3YA8nquU0wDDo5FEOcegGwdemaKMNFTwcEZdPwdIMBETwMOjoXhuHeAWs/zwQrHA0cXBpOdIwC5IESb6MHBqQw6QrMDRJzowcH5xvGPQACLQwCQGgKA1BAApIYAIDUEAKkhAEgNAUBqCABS0wQgQwPyufj4ctZ5WoGDs5JzBiAPhaJN9ODgFIadgnsEkgdFvWqu4OjCAEcXBrMdOwB5PdcppgEHxyKIcw9Atg49M0WY6Kng4Aw6/g4QYKKnAQfHwnDcO0Ct5/lgheOBowuDyc4RgFwQok304OBUBh2h2QEiTvTg4Hzj+EcggMUhAEgNAUBqCABSQwCQGgKA1BAApIYAIDUEAKlpApChAflcfHw56zytwMFZyTkDkIdC0SZ6cHAKw07BPQLJg6JeNVdwdGGAowuD2Y4dgLye6xTTgINjEcS5ByBbh56ZIkz0VHBwBh1/Bwgw0dOAg2NhOO4doNbzfLDC8cDRhcFk5whALgjRJnpwcCqDjtDsABEnenBwvnH8IxDA4hAApIYAIDUEAKkhAEgNAUBqCABSQwCQGgKA1DQByNCAfC4+vpx1nlbg4KzknAHIQ6FoEz04OIVhp+AegeRBUa+aKzi6MMDRhcFsxw5AXs91imnAwbEI4twDkK1Dz0wRJnoqODiDjr8DBJjoacDBsTAc9w5Q63k+WOF44OjCYLJzBCAXhGgTPTg4lUFHaHaAiBM9ODjfOP4RCGBxCAASs+9/AJTA65+FcZSFAAAAAElFTkSuQmCC',
+                ]
+            },
+            (res)=>{
+                console.log('weex_saveImgsToAlbum html res:' + JSON.stringify(res));
+            }
+        )
+    }
+
+    function weex_getNetworkType() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative('getNetworkType',{},(res)=>{
+            console.log('weex_getNetworkType html res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_getNetworkInfo() {
+            let weexModule = weex.requireModule('weexModule')
+            weexModule.callNative('getNetworkInfo',{'type': '1'},(res)=>{
+                console.log('weex_getNetworkInfo res:' + JSON.stringify(res));
+            })
+    }
+
+    function weex_downloadTask() {
+        let weexModule = weex.requireModule('weexModule')
+        weexModule.callNative('downloadTask',{ url: 'https://ss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/cae-legoup-video-target/93be3d88-9fc2-4fbd-bd14-833bca731ca7.mp4' },(res)=>{
+            console.log('downloadTask res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_jumpThirdApp() {
+        let weexModule = weex.requireModule('weexModule')
+        weexModule.callNative('jumpThirdApp',{ scheme: 'https://www.test.com:8080/query/' },(res)=>{
+            console.log('jumpThirdApp res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_changeOrientation() {
+        let weexModule = weex.requireModule('weexModule')
+        weexModule.callNative('changeOrientation',{ orientation: 1 },(res)=>{
+            console.log('changeOrientation res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_getBluetooth() {
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('getBluetooth', {}, (res) => {
+    		console.log('WANG weex_getBluetooth res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_getLocation() {
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('getLocation', {}, (res) => {
+    		console.log('WANG weex_getLocation res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_getReqHeader() {
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('getSystemInfo', {}, (res) => {
+    		console.log('WANG weex_getReqHeader res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_finishWebView() {
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('finishWebView', {}, (res) => {
+    		console.log('WANG weex_finishWebView res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_jumpNative() {
+    	let jumpParams = {
+    		pageId: 'pages/Second',
+    		action: false,
+    		isClose: false,
+    		needLogin: false,
+    		needIdentify: false,
+    		params: {}
+    	}
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('jumpNative', jumpParams, (res) => {
+    		console.log('WANG jumpNative res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_callUp() {
+    	let params = {
+    		phoneNumber: '12345678912',
+    		isModal: 1,
+    		tipWords: '是否跳转到拨号页面'
+    	}
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('callUp', params, (res) => {
+    		console.log('WANG callUp res:' + JSON.stringify(res));
+    	})
+    }
+
+    function weex_getPhoto() {
+    	let params = {
+    		count: 3,
+    		sourceType: 1
+    	}
+    	let weexModule = weex.requireModule('weexModule')
+    	weexModule.callNative('getPhoto', params, (res) => {
+    	    if(res['data']){
+                let resStr = 'weex_getPhoto res = {"status": ' + res['status'] + ', "statusMessage": "' + res['statusMessage'] + '", "data": [';
+                res['data'].forEach((value, index,array)=>{
+                    resStr += '"' + value.substr(0,40) + '...",';
+                })
+                resStr += ']}';
+                console.log(resStr);
+            }else{
+                console.log('weex_getPhoto res = {"status": ' + res['status'] + ', "statusMessage": ' + res['statusMessage'] + '}');
+            }
+    	})
+    }
+
+    function weex_authSetting() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative('authSetting',{},(res)=>{
+            console.log('weex_authSetting html res:' + JSON.stringify(res));
+        })
+    }
+
+    function weex_setFullscreen() {
+        let weexModule = weex.requireModule('weexModule');
+        weexModule.callNative(
+            'setFullscreen',
+            {
+                isOpen: true,
+                showStatusMsg:true,
+                statusMsgColor: 199,
+            },
+            (res)=>{
+                console.log('weex_setFullscreen html res:' + JSON.stringify(res));
+            }
+        )
+    }
+
+    function weex_addForeground() {
+        let weexGlobalEvent = weex.requireModule('globalEvent');
+        weexGlobalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', (res)=>{
+                console.log('weex_addForeground html callback');
+        });
+    }
+
+    function weex_removeForeground() {
+        let weexGlobalEvent = weex.requireModule('globalEvent');
+        weexGlobalEvent.removeEventListener('WXApplicationDidBecomeActiveEvent', (res)=>{
+                console.log('weex_removeForeground html callback');
+        });
+    }
+
+    function weex_addBackground() {
+        let weexGlobalEvent = weex.requireModule('globalEvent');
+        weexGlobalEvent.addEventListener('WXApplicationWillResignActiveEvent', (res)=>{
+                console.log('weex_addBackground html callback');
+        });
+    }
+
+    function weex_removeBackground() {
+        let weexGlobalEvent = weex.requireModule('globalEvent');
+        weexGlobalEvent.removeEventListener('WXApplicationWillResignActiveEvent', (res)=>{
+                console.log('weex_removeBackground html callback');
+        });
+    }
+
+    function weex_getString() {
+        let weexClipboard = weex.requireModule('clipboard');
+        weexClipboard.getString((res)=>{
+                console.log('weex_getString html res: ' + JSON.stringify(res));
+        });
+    }
+
+    function weex_setString() {
+        let weexClipboard = weex.requireModule('clipboard');
+        weexClipboard.setString('test');
+    }
+
+    function weex_setItem() {
+    	let key= 'setItemKey';
+    	let value= 'set item value';
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.setItem(key,value, (res)=>{
+             console.log('WANG weexPreferences setItem callback' + JSON.stringify(res));
+        });
+    }
+    function weex_setItem1() {
+    	let key= 'setItemKey1';
+    	let value= 'set item value';
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.setItem(key,value, (res)=>{
+             console.log('WANG weexPreferences setItem callback' + JSON.stringify(res));
+        });
+    }
+    function weex_getItem() {
+    	let key= 'setItemKey';
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.getItem(key, (res)=>{
+             console.log('WANG weexPreferences getItem callback' + JSON.stringify(res));
+        });
+    }
+    function weex_removeItem() {
+    	let key= 'setItemKey';
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.removeItem(key, (res)=>{
+             console.log('WANG weexPreferences weex_removeItem callback' + JSON.stringify(res));
+        });
+    }
+    function weex_length() {
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.length((res)=>{
+             console.log('WANG weexPreferences getItem callback' + JSON.stringify(res));
+        });
+    }
+    function weex_getAllKeys() {
+        let weexPreferences = weex.requireModule('UMEWeexStorage');
+        weexPreferences.getAllKeys((res)=>{
+             console.log('WANG weexPreferences getItem callback' + JSON.stringify(res));
+        })
+    }
+    function weex_enableFullScreenHeight() {
+        let weexDeviceInfo = weex.requireModule('deviceInfo');
+        weexDeviceInfo.enableFullScreenHeight((res)=>{
+         console.log('weex_enableFullScreenHeight html res: ' +  JSON.stringify(res));
+        });
+    }
+
+    function weex_pick() {
+        let options = {
+            index : 1,
+    	    items : ['apple1', 'orange2', 'peach3', 'grape4', 'banana5']
+        }
+        let weexPicker = weex.requireModule('picker');
+        weexPicker.pick(options, (res)=>{
+         console.log('WANG weexPicker pick res: ' +  JSON.stringify(res));
+        });
+    }
+    function weex_pickDate() {
+        let options = {
+            value : '2023-11-15',
+    	    max : '2024-12-31',
+            min : '2020-01-01'
+        }
+        let weexPicker = weex.requireModule('picker');
+        weexPicker.pickDate(options,(res)=>{
+         console.log('WANG weexPicker pickDate res: ' +  JSON.stringify(res));
+        });
+    }
+    function weex_pickTime() {
+      let options = {
+            value : '12:00'
+      }
+      let weexPicker = weex.requireModule('picker');
+      weexPicker.pickTime(options,(res)=>{
+         console.log('WANG weexPicker pickTime res: ' +  JSON.stringify(res));
+      });
+    }
+    function weex_navigatorPop() {
+        let weexNavigator = weex.requireModule('navigator');
+        weexNavigator.pop((res)=>{
+         console.log('WANG weexNavigator pop res: ' +  JSON.stringify(res));
+        });
+    }
+</script>
+<body>
+<div class="container">
+    <p id="para" style="font-size:100px">Some text here</p>
+    <button onclick="weex_navigatorPop();" style="font-size:100px">weex_navigatorPop</button>
+    <button onclick="weex_pick();" style="font-size:100px">weex_pick</button>
+    <button onclick="weex_pickDate();" style="font-size:100px">weex_pickDate</button>
+    <button onclick="weex_pickTime();" style="font-size:100px">weex_pickTime</button>
+    <button onclick="weex_getAllKeys();" style="font-size:100px">weex_getAllKeys</button>
+    <button onclick="weex_length();" style="font-size:100px">weex_length</button>
+    <button onclick="weex_removeItem();" style="font-size:100px">weex_removeItem</button>
+    <button onclick="weex_getItem();" style="font-size:100px">weex_getItem</button>
+    <button onclick="weex_setItem();" style="font-size:100px">weex_setItem</button>
+    <button onclick="weex_setItem1();" style="font-size:100px">weex_setItem1</button>
+    <button onclick="weex_getLocalIPAddress();" style="font-size:100px">weex_getLocalIPAddress</button>
+    <button onclick="weex_chooseContact();" style="font-size:100px">weex_chooseContact</button>
+    <button onclick="weex_getNetworkType();" style="font-size:100px">weex_getNetworkType</button>
+    <button onclick="weex_getLocation();" style="font-size:100px">weex_getLocation</button>
+    <button onclick="weex_getBluetooth();" style="font-size:100px">weex_getBluetooth</button>
+    <button onclick="weex_getNetworkInfo();" style="font-size:100px">weex_getNetworkInfo</button>
+    <button onclick="weex_getPhoto();" style="font-size:100px">weex_getPhoto</button>
+    <button onclick="weex_callUp();" style="font-size:100px">weex_callUp</button>
+    <button onclick="weex_saveImgsToAlbum();" style="font-size:100px">weex_saveImgsToAlbum</button>
+    <button onclick="weex_authSetting();" style="font-size:100px">weex_authSetting</button>
+    <button onclick="weex_getReqHeader();" style="font-size:100px">weex_getReqHeader</button>
+    <button onclick="weex_jumpNative();" style="font-size:100px">weex_jumpNative</button>
+    <button onclick="weex_setFullscreen();" style="font-size:100px">weex_setFullscreen</button>
+    <button onclick="weex_finishWebView();" style="font-size:100px">weex_finishWebView</button>
+    <button onclick="weex_downloadTask();" style="font-size:100px">weex_downloadTask</button>
+    <button onclick="weex_saveVideoToPhotosAlbum();" style="font-size:100px">weex_saveVideoToPhotosAlbum</button>
+    <button onclick="weex_jumpThirdApp();" style="font-size:100px">weex_jumpThirdApp</button>
+    <button onclick="weex_changeOrientation();" style="font-size:100px">weex_changeOrientation</button>
+    <button onclick="weex_addForeground();" style="font-size:100px">监听前台事件</button>
+    <button onclick="weex_removeForeground();" style="font-size:100px">取消监听前台事件</button>
+    <button onclick="weex_addBackground();" style="font-size:100px">监听后台事件</button>
+    <button onclick="weex_removeBackground();" style="font-size:100px">取消监听后台事件</button>
+    <button onclick="weex_getString();" style="font-size:100px">获取剪贴板数据</button>
+    <button onclick="weex_setString();" style="font-size:100px">设置剪贴板数据:test</button>
+    <button onclick="weex_enableFullScreenHeight();" style="font-size:100px">获取全屏高度</button>
+</div>
+</body>
+</html>

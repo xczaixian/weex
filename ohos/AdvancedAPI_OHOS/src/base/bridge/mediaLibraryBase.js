@@ -7,7 +7,8 @@ export class MediaLibraryBase {
     try {
       // 权限列表
       const arrMdl = [
-        'ohos.permission.SHORT_TERM_WRITE_IMAGEVIDEO'
+        'ohos.permission.READ_MEDIA', // 媒体库读取权限
+        'ohos.permission.WRITE_MEDIA' // 媒体库写入权限
       ]
       const atManager = abilityAccessCtrl.createAtManager()
       return new Promise(resolve => {

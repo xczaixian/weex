@@ -67,7 +67,7 @@ const config = {
     cssSourceMap: false,
     proxyTable: {
       '/gateway': {
-        target: 'http://gray.umetrip.com/',
+        target: 'http://localhost:8080/',
         changeOrigin: true
       }
     },

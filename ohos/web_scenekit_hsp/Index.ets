@@ -12,6 +12,10 @@ export { ApiOptions } from './src/main/ets/adapterservice/api/apimodel/ApiOption
 
 export { PreRenderUrl } from './src/main/ets/webrouterservice/common/entity/PreRenderUrl';
 
+export { RouterStorage } from './src/main/ets/webrouterservice/globalrouter/RouterStorage';
+
+export { PageModelController } from './src/main/ets/webrouterservice/pagemanager/PageModelController';
+
 export {
   codeCache,
   CodeCacheController,

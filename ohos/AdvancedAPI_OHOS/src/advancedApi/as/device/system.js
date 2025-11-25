@@ -1,5 +1,16 @@
 import Result from '../../../base/util/Result'
 
+export function getSystemInfo (...args) {
+  console.debug('[AdvancedAPI] start getSystemInfo')
+  const callback = args.pop()
+  const device = requireAPI('ASDevice')
+  device.getSystemInfo().then(
+    systemInfo => {
+      callback.invoke(Result.success(systemInfo))
+    }
+  )
+}
+
 export function getSystemInfoSync(...args) {
   console.debug('[AdvancedAPI] start getSystemInfoSync')
   const device = requireAPI('ASDevice')

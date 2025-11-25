@@ -15,11 +15,16 @@ import { PageModel } from './PageModel';
 import { PushPageType, RouteType } from '../common/entity/RouteType';
 import { WebNodeController } from '../webmanger/WebNodeController';
 import Logger from '../../common/Logger';
+import { WebManager } from '../webmanger/WebManager';
+import { MixWebManager } from "../webmanger/MixWebManager";
+import { ViewAppear } from '../../adapterservice/api/ViewAppear';
+import { Constants } from '../../adapterservice/constants/Constants';
 
 const TAG: string = 'PageModelController';
 
 export class PageModelController {
   private static instance: PageModelController;
+  private isDelayingPageDown: boolean = false;
   public pageModelArray: Array<Array<PageModel>> = new Array();
   public pageStackArray: Array<NavPathStack> = new Array();
 
@@ -51,6 +56,15 @@ export class PageModelController {
     return pageModels[length-1];
   }
 
+  public getLastPageModel(): PageModel | undefined {
+    const nativePageId: number = this.getPageStackArrayLen() - 2;
+    const pageModels = this.pageModelArray[nativePageId] ?? [];
+    const length: number = pageModels?.length ?? 0;
+    if (length === 0) {
+      return undefined;
+    }
+    return pageModels[length-1];
+  }
 
   public loading(isLoading: boolean) {
     let pageModel: PageModel | undefined = this.getCurrentPageModel();
@@ -77,7 +91,7 @@ export class PageModelController {
   public pushPath(routeType: RouteType) {
     const nativePageId: number = this.getPageStackArrayLen() - 1;
     let pageModel: PageModel | undefined = this.getCurrentPageModel() as PageModel;
-    let nextPageModel: PageModel = new PageModel(new WebNodeController(), pageModel.id + 1);
+    let nextPageModel: PageModel = new PageModel(new WebNodeController(), pageModel?.id + 1);
     let pageModels = this.pageModelArray[nativePageId] ?? [];
     pageModels.push(nextPageModel);
     this.pageModelArray[nativePageId] = pageModels;
@@ -86,8 +100,12 @@ export class PageModelController {
 
     if (routeType === RouteType.MULTI_MULTI) {
       // 延迟下树 解决动效白屏
+      this.isDelayingPageDown = true;
       setTimeout(() => {
-        pageModel?.pageDown();
+        if (this.isDelayingPageDown) {
+          pageModel?.pageDown();
+          this.isDelayingPageDown = false;
+        }
       }, 300)
     } else {
       pageModel?.pageDown();
@@ -98,7 +116,7 @@ export class PageModelController {
   public replacePath() {
     const nativePageId: number = this.getPageStackArrayLen() - 1;
     let pageModel: PageModel | undefined = this.getCurrentPageModel() as PageModel;
-    let nextPageModel: PageModel = new PageModel(new WebNodeController(), pageModel.id);
+    let nextPageModel: PageModel = new PageModel(new WebNodeController(), pageModel?.id);
     let pageModels = this.pageModelArray[nativePageId] ?? [];
     pageModels.splice(-1, 1, nextPageModel);
 
@@ -127,6 +145,12 @@ export class PageModelController {
       this.loading(true);
     }
 
+    let mixPageId = MixWebManager.getInstance().getMixPageWebID();
+    if (!pageModel && mixPageId) {
+      ViewAppear.execAppearByCurrentPage(mixPageId, Constants.VIEW_DIS_APPEAR_TYPE);
+      MixWebManager.getInstance().freeMixWeb(mixPageId);
+    }
+
     this.popPageStack(animated);
 
     // 原生页返回原生页 nativePageId减一
@@ -134,12 +158,24 @@ export class PageModelController {
       this.pageStackArray.splice(nativePageId);
     }
     if (pageModel) {
-      pageModel?.pageDown();
+      // 延迟下树，解决动效白屏
+      setTimeout(() => {
+        pageModel?.pageDown();
+      }, 300)
+    }
+    if (this.isDelayingPageDown) {
+      // 上一个页面延迟下树未完成时取消该延迟下树操作
+      this.isDelayingPageDown = false;
     }
 
     let lastPageModel: PageModel | undefined = this.getCurrentPageModel();
     if (lastPageModel) {
       lastPageModel?.pageUp();
+    } else {
+      let mixWebs = MixWebManager.getInstance().getCurrentMixWeb()
+      mixWebs?.forEach((mixPageModule) => {
+        ViewAppear.execAppearByCurrentPage(mixPageModule.mixWebId, Constants.VIEW_APPEAR_TYPE);
+      })
     }
   }
 
@@ -163,16 +199,19 @@ export class PageModelController {
   private popPageStack(animated: boolean) {
     const nativePageId: number = this.getPageStackArrayLen() - 1;
     let pageModel: PageModel | undefined = this.getCurrentPageModel();
-    if (this.pageStackArray[nativePageId]?.size() === 1) {
-      this.clearPageStack();
-    } else {
-      // 表示pop层数大于等于this.pageModelArray[nativePageId]的数量，直接clearPageStack
-      if (!pageModel) {
-        this.clearPageStack();
-      } else {
-        this.pageStackArray?.[nativePageId].popToIndex(pageModel?.id ?? 0, animated);
-      }
+    if (this.pageStackArray[nativePageId]?.size() > 1 && pageModel) {
+      this.pageStackArray?.[nativePageId].popToIndex(pageModel?.id ?? 0, animated);
     }
+    // if (this.pageStackArray[nativePageId]?.size() === 1) {
+    //   this.clearPageStack();
+    // } else {
+    //   // 表示pop层数大于等于this.pageModelArray[nativePageId]的数量，直接clearPageStack
+    //   if (!pageModel) {
+    //     this.clearPageStack();
+    //   } else {
+    //     this.pageStackArray?.[nativePageId].popToIndex(pageModel?.id ?? 0, animated);
+    //   }
+    // }
   }
 
   public clearPageStack() {

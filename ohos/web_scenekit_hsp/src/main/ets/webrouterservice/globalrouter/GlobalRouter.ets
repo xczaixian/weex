@@ -22,6 +22,10 @@ import { UrlUtil } from '../common/util/UrlUtil';
 import { WebManager } from '../webmanger/WebManager';
 import bundleManager from '@ohos.bundle.bundleManager';
 import { BusinessError } from '@ohos.base';
+import { ViewAppear } from '../../adapterservice/api/ViewAppear';
+import { Constants } from '../../adapterservice/constants/Constants';
+import { MixWebManager } from '../webmanger/MixWebManager';
+
 const TAG: string = 'GlobalRouter';
 
 export class GlobalRouter {
@@ -46,8 +50,8 @@ export class GlobalRouter {
    * @param routerUrl
    */
   public firstLoad(routerUrl: string): void {
-    routerUrl = UrlUtil.addFakeDomain(routerUrl);
     let routerStorageInstance: RouterStorage = RouterStorage.getInstance();
+    routerUrl = UrlUtil.addFakeDomain(routerUrl);
     let nodeType: NodeType = routerStorageInstance.getNodeType(routerUrl);
 
     let webId: number = WebManager.getInstance().getWebInstanceId(false, routerUrl);
@@ -60,6 +64,14 @@ export class GlobalRouter {
     routerStorageInstance.addNode(routerUrl, webId, nodeType);
     routerStorageInstance.addUrlNode(routerUrl, webId);
     PageModelController.getInstance().pushPathFirst();
+
+    const pathStackArrayLen = PageModelController.getInstance().getPageStackArrayLen();
+    if (pathStackArrayLen > 1) {
+      const lastPage = PageModelController.getInstance().getLastPageModel();
+      if (lastPage) {
+        ViewAppear.execAppearByCurrentPage(lastPage.webId, Constants.VIEW_DIS_APPEAR_TYPE);
+      }
+    }
 
     if (nodeType === NodeType.TEMPLATE_NODE) {
       let params = UrlUtil.getUrlParams(routerUrl);
@@ -77,6 +89,12 @@ export class GlobalRouter {
       if (!WebManager.getInstance().isPreRenderWeb(webId)) {
         WebManager.getInstance().addWebControllerUrl(webId, routerUrl);
         WebManager.getInstance().getWebController(webId)?.loadUrl(UrlUtil.getUrlTemplate(routerUrl));
+      } else {
+        if (WebManager.getInstance().getDelayExecute(webId)) {
+          WebManager.getInstance().getDelayExecute(webId)?.forEach(item => {
+            item()
+          })
+        }
       }
       WebManager.getInstance().getWebController(webId)?.onActive();
     }
@@ -232,6 +250,12 @@ export class GlobalRouter {
     if (!WebManager.getInstance().isPreRenderWeb(webId)) {
       WebManager.getInstance().addWebControllerUrl(webId, routerUrl);
       webManagerInstance.getWebController(webId)?.loadUrl(UrlUtil.getUrlTemplate(routerUrl));
+    } else {
+      if (WebManager.getInstance().getDelayExecute(webId)) {
+        WebManager.getInstance().getDelayExecute(webId)?.forEach(item => {
+          item()
+        })
+      }
     }
     WebManager.getInstance().getWebController(webId)?.onActive();
     return true;
@@ -279,13 +303,17 @@ export class GlobalRouter {
    * @param webId
    * @returns
    */
-  public onBackPress(popNum: number, animated: boolean): boolean {
+  public onBackPress(popNum: number, animated: boolean, webId: number | undefined): boolean {
+    if (webId) {
+      ViewAppear.execAppearByCurrentPage(webId, Constants.VIEW_DIS_APPEAR_TYPE)
+    }
     const nativePageId: number = PageModelController.getInstance().getPageStackArrayLen() - 1;
     const routerStorageInstance = RouterStorage.getInstance();
     const pageModelInstance = PageModelController.getInstance();
 
     // compare the popNum and current page num of this extWeb.
-    if (popNum > pageModelInstance.pageModelArray[nativePageId].length) {
+    if (pageModelInstance.pageModelArray[nativePageId] &&
+      popNum > pageModelInstance.pageModelArray[nativePageId].length) {
       popNum = pageModelInstance.pageModelArray[nativePageId].length;
     }
 
@@ -317,6 +345,10 @@ export class GlobalRouter {
         case RouteType.MULTI_MULTI:
           if (routerStorageInstance.checkNeedFreeOrNot(webIdArray[index])) {
             WebManager.getInstance().freeWebInstance(webIdArray[index]);
+            // 清除webId绑定的延迟执行原生方法
+            WebManager.getInstance().clearDelayExecute(webIdArray[index])
+            // 清除webId绑定的预渲染前台判断变量
+            WebManager.getInstance().clearIsForeground(webIdArray[index])
           }
       }
     })
@@ -326,7 +358,7 @@ export class GlobalRouter {
       pageModelInstance.popPath(popNum, animated, routerType, pushPageType);
     }
 
-    if (pageModelInstance.pageModelArray[nativePageId].length === 0) {
+    if (pageModelInstance.pageModelArray[nativePageId] && pageModelInstance.pageModelArray[nativePageId].length === 0) {
       PageModelController.getInstance().pageModelArray.splice(nativePageId);
       router.back();
     }
@@ -359,7 +391,7 @@ export class GlobalRouter {
     }
     const webArray = routerStorageInstance.deleteNode(1);
     webArray && webArray.length && webManagerInstance.freeWebInstance(webArray[0]);
-    const webId: number = webManagerInstance.getWebInstanceId(false,routerUrl);
+    const webId: number = webManagerInstance.getWebInstanceId(false, routerUrl);
     routerStorageInstance.addNode(routerUrl, webId, nodeType);
     routerStorageInstance.deleteUrlNode(1);
     routerStorageInstance.addUrlNode(routerUrl, webId);
@@ -378,6 +410,12 @@ export class GlobalRouter {
       if (!WebManager.getInstance().isPreRenderWeb(webId)) {
         WebManager.getInstance().addWebControllerUrl(webId, routerUrl);
         webManagerInstance.getWebController(webId)?.loadUrl(routerUrl);
+      } else {
+        if (WebManager.getInstance().getDelayExecute(webId)) {
+          WebManager.getInstance().getDelayExecute(webId)?.forEach(item => {
+            item()
+          })
+        }
       }
       WebManager.getInstance().getWebController(webId)?.onActive();
     }

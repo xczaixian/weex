@@ -16,7 +16,7 @@ import { BuilderData } from '../common/entity/BuilderData';
 import { RouterStorage } from '../globalrouter/RouterStorage';
 import { WebManager } from '../webmanger/WebManager';
 import { WebNodeController } from '../webmanger/WebNodeController';
-import { Constants } from '../../adapterservice/constants/Constants'
+import { Constants } from '../../adapterservice/constants/Constants';
 
 @Observed
 export class PageModel {

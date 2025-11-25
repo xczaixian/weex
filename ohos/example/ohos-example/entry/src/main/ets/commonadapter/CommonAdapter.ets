@@ -31,6 +31,7 @@ import { ThirdAppApi } from './apiadapter/ThirdAppAPI';
 import { WebViewAPI } from './apiadapter/WebViewAPI';
 import { WindowApi } from './apiadapter/WindowAPI';
 import { HiTraceMeterAPI } from './apiadapter/HiTraceMeterAPI';
+import { BarStyle } from './apiadapter/BarStyle';
 import { ExtWebController } from 'WebSceneKitHsp';
 // import { ExtWebController } from 'WebSceneKit';
 import { LottieAPI } from './componentAPI/LottieAPI';
@@ -74,5 +75,6 @@ export class CommonAdapter {
     ExtWebController.registerCustomFun('startTrace', new HiTraceMeterAPI().startTrace)
     ExtWebController.registerCustomFun('finishTrace', new HiTraceMeterAPI().finishTrace)
     ExtWebController.registerCustomFun('traceByValue', new HiTraceMeterAPI().traceByValue)
+    ExtWebController.registerCustomFun('BarStyle', new BarStyle().setBarStyle)
   }
 }

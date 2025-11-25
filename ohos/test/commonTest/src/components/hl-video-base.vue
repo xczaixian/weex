@@ -43,7 +43,7 @@ export default {
     hosSameLayerArgs() {
       // 对象中的键值和原生自定义组件支持的属性和方法保持一致
       return {
-        ...this.hosUniqueProps, // 鸿蒙原生组件独有属性和方法示例
+        ...this.hosUniqueProps, // 原生组件独有属性和方法示例
         src: this.src, // 多端支持公共属性示例
         controls: this.controls,
         autoPlay: this.autoPlay,

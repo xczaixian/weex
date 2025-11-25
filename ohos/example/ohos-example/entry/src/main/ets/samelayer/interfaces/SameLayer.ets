@@ -142,3 +142,10 @@ export class WebParams {
     this.src = '';
   }
 }
+
+@Observed
+export class LoginWithHuaweiIDButtonParams {
+  handleOnTap?: Function
+
+  constructor() {}
+}

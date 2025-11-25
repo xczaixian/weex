@@ -37,6 +37,7 @@
             <text>(weex)list</text>
             <text class="btn" @click="pushPage('list_scrollbar')">list_scrollbar</text>
             <text class="btn" @click="pushPage('long_list')">长列表优化测试</text>
+            <text class="btn" @click="pushPage('virtualList2')">虚拟列表测试</text>
         </div>
     </scroller>
     <picker :visibility="showPicker" :pick-list="pickList" :cur-value="curValue" :pickerStyle="{ position }" @pickerCancel="pickerCancel" @pickerConfirm="pickerConfirm"></picker>
@@ -91,25 +92,25 @@ const imageList = [{
         scaleMin: 0.5,
         scaleMax: 2,
         resize: 'contain',
-        src: 'http://img.umetrip.com/fs/snspost/user/155,124f741809972c28',
+        src: 'https://img0.baidu.com/it/u=4224216114,543718935&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800',
     },
     {
         scaleMin: 0.5,
         scaleMax: 1,
         resize: 'cover',
-        src: 'http://img.umetrip.com/fs/snspost/user/153,124f741e89dc6ac1',
+        src: 'https://iknow-pic.cdn.bcebos.com/91ef76c6a7efce1b74836f54bd51f3deb58f6580?for=bg',
     },
     {
         scaleMin: 1,
         scaleMax: 2,
         resize: 'stretch',
-        src: 'http://img.umetrip.com/fs/snspost/user/153,124f7424ede17768',
+        src: 'https://iknow-pic.cdn.bcebos.com/77c6a7efce1b9d16176f3dffe1deb48f8d546480?for=bg',
     },
     {
         scaleMin: 0.25,
         scaleMax: 3,
         resize: 'contain',
-        src: 'http://img.umetrip.com/fs/snspost/user/154,124fa0c81e23f257',
+        src: 'https://iknow-pic.cdn.bcebos.com/2cf5e0fe9925bc31c2c3de1c4cdf8db1ca13709c',
     },
     {
         scaleMin: 0.5,
@@ -222,7 +223,6 @@ export default {
         dom.addRule('fontFace', {
             fontFamily: 'dinBold',
             src: `url('${useUrl}')`,
-            // 'src': "url('http://img.umetrip.com/fs/h5/static/150,11e7fb4292ba7a6a')"
         });
     },
     created() {},

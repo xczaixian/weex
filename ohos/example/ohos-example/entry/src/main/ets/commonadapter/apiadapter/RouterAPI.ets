@@ -65,8 +65,11 @@ export class RouterAPI {
     };
 
     let jumpParams: JumpParams = new JumpParams();
-    jumpParams.url = jumpInParams.pageId;
-    jumpParams.url = 'pages/Second' //临时适配
+    if (typeof jumpInParams.pageId !== 'string') {
+      jumpParams.url = 'pages/Second'
+    } else {
+      jumpParams.url = jumpInParams.pageId;
+    }
     jumpParams.complete = RouterCompleteCallback;
 
     let routerParams: Array<JumpParams> = new Array();
@@ -99,7 +102,7 @@ export class RouterAPI {
 }
 
 class JumpInParams {
-  pageId: string = 'pages/Second';
+  pageId: string = '';
   action?: boolean = false;
   isClose?: boolean = false;
   needLogin?: boolean = false;
@@ -108,7 +111,7 @@ class JumpInParams {
 }
 
 class JumpParams {
-  url: string = 'pages/Second';
+  url: string = '';
   animationType?: string;
   animationDuration?: number;
   events?: object;

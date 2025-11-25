@@ -16,6 +16,7 @@ import { ExtWeb } from '../../../../Index';
 @Entry
 @Component
 struct PageTemplate {
+  @StorageLink('isOnForeground') isOnForeground: boolean = true;
   url: string = "";
 
   aboutToAppear() {
@@ -26,7 +27,7 @@ struct PageTemplate {
 
   build() {
     Column() {
-      ExtWeb({ url: this.url })
+      ExtWeb({ url: this.url , isOnForeground: this.isOnForeground})
     }
     .width('100%')
     .height('100%')

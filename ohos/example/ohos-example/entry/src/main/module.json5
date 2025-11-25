@@ -114,16 +114,16 @@
       {
         "name": "ohos.permission.KEEP_BACKGROUND_RUNNING"
       },
-      {
-        "name": "ohos.permission.READ_PASTEBOARD",
-        "reason": "$string:pasteboard_reason",
-        "usedScene": {
-          "abilities": [
-            "EntryAbility"
-          ],
-          "when": "inuse"
-        }
-      },
+//      {
+//        "name": "ohos.permission.READ_PASTEBOARD",
+//        "reason": "$string:pasteboard_reason",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "inuse"
+//        }
+//      },
       {
         "name": "ohos.permission.ACCESS_BLUETOOTH",
         "reason": "$string:bluetooth_reason",
@@ -135,7 +135,7 @@
         }
       },
       {
-        name: "ohos.permission.WRITE_CALENDAR",
+        "name": "ohos.permission.WRITE_CALENDAR",
         "reason": "$string:calendar_write_reason",
         "usedScene": {
           "abilities": [
@@ -153,7 +153,7 @@
           ],
           "when": "inuse"
         }
-      },
+      }
     ],
     "deliveryWithInstall": true,
     "installationFree": false,
@@ -181,6 +181,12 @@
         "backgroundModes": [
           "audioPlayback"
         ]
+      }
+    ],
+    "metadata": [
+      {
+        "name": "client_id",
+        "value": "112348427"
       }
     ]
   }

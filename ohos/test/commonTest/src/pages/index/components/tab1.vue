@@ -56,7 +56,37 @@
         >
       </div> -->
       <text class="font-title">(weex&h5)</text>
-      <text class="btn" @click="jumpNative">跳转原生页面</text>
+      <text class="btn" @click="jumpNative({
+      pageId: 'pages/Second',
+      action: false,
+      isClose: false
+      })">跳转原生页面Second(navigateTo,action=false)</text>
+
+      <text class="btn" @click="jumpNative({
+      pageId: 'pages/Second',
+      action: true,
+      isClose: false
+      })">跳转原生页面Second(navigateTo,action=true)</text>
+
+      
+      <text class="btn" @click="jumpNative({
+      pageId: 'pages/Second',
+      action: false,
+      isClose: true
+      })">跳转原生页面Second(redirectTo,action=false)</text>
+      
+      <text class="btn" @click="jumpNative({
+      pageId: 'pages/Third',
+      action: false,
+      isClose: true
+      })">跳转原生页面Third(redirectTo,action=false)</text>
+
+      <text class="btn" @click="jumpNative({
+      pageId: 'pages/Third',
+      action: true,
+      isClose: true
+      })">跳转原生页面Third(redirectTo,action=true)</text>  
+
       <text class="btn" @click="chooseContact">选择联系人</text>
       <text class="btn" @click="getNetworkType">获取网络状态 wx</text>
       <div class="btn-group">
@@ -82,8 +112,9 @@
       </div>
       <div class="btn-group">
         <text class="font-title">调用多媒体功能</text>
-        <text class="btn" @click="getPhoto(0)">获取图片(相机) wx</text>
-        <text class="btn" @click="getPhoto(1)">获取图片(相册) wx</text>
+        <text class="btn" @click="getPhoto(0,1)">获取图片(相机) wx</text>
+        <text class="btn" @click="getPhoto(1,1)">获取图片(相册) wx</text>
+        <text class="btn" @click="getPhoto(1,3)">至多获取3张图片(相册) wx</text>
         <div style="flex-direction: row; align-items: center; flex-wrap: wrap">
           <image
             v-for="(image, index) in imgArray"
@@ -95,17 +126,31 @@
       </div>
       <div class="btn-group">
         <text class="font-title">呼起客户端打电话</text>
-        <text class="btn" @click="callUp({ isModal: 1 })"
+        <text class="btn" @click="callUp({phoneNumber: '13530735770', isModal: 1 })"
           >打电话(isModal=1)</text
         >
-        <text
-          class="btn"
-          @click="callUp({ isModal: 1, tipWords: '您即将拨打xxx电话' })"
+        <text class="btn" @click="callUp({phoneNumber: '13530735770', isModal: 1, tipWords: '您即将拨打xxx电话' })"
           >打电话(tipWords)</text
+        >
+        <text class="btn" @click="callUp({phoneNumber: '13530735770', isModal: 0 })"
+          >打电话111(isModal=0)</text
+        >
+        <text class="btn" @click="callUp({phoneNumber: 'sdhkjasdlajd', isModal: 0 })"
+          >打电话(电话号码为英文)</text
+        >
+        <text class="btn" @click="callUp({phoneNumber: 'dghsjds122@#！%（）+=*214', isModal: 0 })"
+          >打电话(电话号码含有特殊字符)</text
+        >
+        <text class="btn" @click="callUp({phoneNumber: '', isModal: 0 })"
+          >打电话(电话号码为空)</text
+        >
+        <text class="btn" @click="callUp({phoneNumber: '2367213689213678236782167837821367213', isModal: 0 })"
+          >打电话(电话号码为超长数字)</text
         >
         <text class="btn" @click="openCallUpModal">打电话(isModal=0)</text>
       </div>
       <text class="btn" @click="saveImgsToAlbum">保存图片至相册</text>
+      <text class="btn" @click="saveVideoToAlbum">保存视频至相册</text>
       <text class="btn" @click="isOpenMsg">检测是否打开消息</text>
       <text class="btn" @click="updateRes()">资源更新</text>
       <text class="btn" @click="getString()">获取剪贴板数据</text>
@@ -116,6 +161,9 @@
       <text class="btn" @click="removeItem()">根据键名删除数据</text>
       <text class="btn" @click="length()">获取数据总数</text>
       <text class="btn" @click="getAllKeys()">获取所有数据的键名</text>
+      <text class="btn" @click="downLoadFile()">download测试</text>
+      <text class="btn" @click="downLoadImage()">download图片</text>
+      <text class="btn" @click="getSystemInfo()">获取客户端版本号</text>
     </scroller>
     <!-- 写onCancel会触发点击遮罩层关闭；写:copy="true"会触发copy -->
     <modal
@@ -158,6 +206,9 @@ import {
   toOpenMsg,
   popPage,
   updateRes,
+  downLoadTask,
+  saveVideoToPhotosAlbum,
+  getReqHeader
 } from '@/utils/jsapi.js';
 
 import { callNative, isWeex } from '@/utils/index.js'
@@ -266,13 +317,9 @@ export default {
 
       this.content = JSON.stringify(result1);
     },
-    jumpNative() {
-      callNative('jumpNative', {
-      pageId: 10,
-      action: true,
-      params: {},
-      }, (r) => {
-        
+    jumpNative(params) {
+      callNative('jumpNative', params, (data) => {
+        this.callback(data);
       });
     },
     chooseContact() {
@@ -358,7 +405,7 @@ export default {
         this.callback(data);
       });
     },
-    getPhoto(tag, count = 1) {
+    getPhoto(tag, count) {
       chooseImage(tag, count).then((data) => {
         data.forEach((i) => {
           const item = `data:image/png;base64,${i}`;
@@ -372,10 +419,50 @@ export default {
         this.callback(data);
       });
     },
+    saveVideoToAlbum() {
+      let param = {
+        url: "https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+      }
+      downLoadTask(param).then((data) => {
+        let fileSourth = {
+          filePath: data.data
+        }
+        saveVideoToPhotosAlbum(fileSourth).then((data) => {
+          console.log("building tab1.vue saveVideoToPhotosAlbum then")
+          this.callback(data)
+        })
+      })
+    },
+    downLoadFile() {
+      let param = {
+        url: "https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400",
+        fileType: 'mp4'
+      }
+      downLoadTask(param).then((data) => {
+        console.log("building tab1.vue downLoadFile then")
+        this.callback(data)
+      })
+    },
+    downLoadImage() {
+      let param = {
+        url: "https://t7.baidu.com/it/u=1407329005,2594929104&fm=193",
+        fileType: 'jpeg'
+      }
+      downLoadTask(param).then((data) => {
+        console.log("building tab1.vue downLoadImage then")
+        this.callback(data)
+      })
+    },
+    getSystemInfo() {
+      getReqHeader().then((data) => {
+        console.log("building tab1.vue getReqHeader then")
+        this.callback(data)
+      })
+    },
     callUp(params = {}) {
       console.log('building tab1.vue callUp');
       callUp({
-        phoneNumber: '13530735770',
+        phoneNumber: params.phoneNumber,
         isModal: params.isModal, // 是否弹窗询问
         tipWords: params.tipWords || '', // 弹窗里的说明文案
       }).then((data) => {

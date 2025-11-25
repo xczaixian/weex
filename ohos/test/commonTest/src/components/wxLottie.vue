@@ -74,9 +74,8 @@ export default {
       status2: 'play',
       sourceJson: JSON.stringify(data),
       sourceJson2: JSON.stringify(calender),
-      // sourceUrl: 'https://gray.umetrip.com/assets/json/car_order_animation.json',
       sourceUrl2:
-        'http://img.umetrip.com/fs/serviceRecommend/static/149,115761b771bc7e31',
+        'https://img0.baidu.com/it/u=4224216114,543718935&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800',
       speed: '',
       loop: true,
       resizeMode: 'cover',

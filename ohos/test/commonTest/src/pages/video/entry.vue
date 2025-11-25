@@ -481,13 +481,13 @@ export default {
       state7: '----',
       state8: '----',
       src1: 'https://xitong-static.oss-cn-beijing.aliyuncs.com/video/202007171029.small.mp4',
-      src2: 'https://www.umetrip.com/activity/shutl/jpy.mp4',
-      src3: 'https://www.umetrip.com/activity/shutl/zyc.mp4',
+      src2: 'https://cloud.video.taobao.com//play/u/1768198696/p/1/e/6/t/1/239439242603.mp4',
+      src3: 'https://cloud.video.taobao.com//play/u/1768198696/p/1/e/6/t/1/239439242603.mp4',
       src4: 'https://cloud.video.taobao.com//play/u/1768198696/p/1/e/6/t/1/239439242603.mp4',
       poster1:
-        'http://img.umetrip.com/getImage/67,04dece41d0ac11d6?module=entertain',
+        'https://img2.baidu.com/it/u=1354997597,1842864150&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800',
       poster2:
-        'http://img.umetrip.com/jboss/UmeImageMagic/api/fileSystem/getFileByFid/42,0223d5415e986e4b?module=entertain',
+        'https://img2.baidu.com/it/u=1354997597,1842864150&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800',
       buffered1: '0%',
       loadedDuration1: 0,
       currentTime1: 0,
@@ -654,7 +654,7 @@ export default {
           objectFit = 'contain';
           break;
         case 2:
-          src = 'https://www.umetrip.com/activity/shutl/jpy.mp4';
+          src = 'https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400';
           objectFit = 'contain';
           break;
         case 3:
@@ -663,7 +663,7 @@ export default {
           objectFit = 'fill';
           break;
         case 4:
-          src = 'https://www.umetrip.com/activity/shutl/jpy.mp4';
+          src = 'https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400';
           objectFit = 'fill';
           break;
         case 5:
@@ -672,14 +672,14 @@ export default {
           objectFit = 'cover';
           break;
         case 6:
-          src = 'https://www.umetrip.com/activity/shutl/jpy.mp4';
+          src = 'https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400';
           objectFit = 'cover';
           break;
       }
       pushPage('videoFit', { src, objectFit, muted });
     },
     playMuted() {
-      const src = 'https://www.umetrip.com/activity/shutl/jpy.mp4';
+      const src = 'https://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400';
       const objectFit = 'contain';
       const muted = 1;
       pushPage('videoFit', { src, objectFit, muted });

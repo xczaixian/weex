@@ -40,10 +40,8 @@ struct Third {
 
   build() {
     Column() {
-      Button('第一个extWeb')
-      ExtWeb({ url: "resource://rawfile/hybrid1.html"}).height('50%');
-      Button('第二个extWeb')
-      ExtWeb({ url: "resource://rawfile/hybrid2.html"}).height('50%');
+      Button('extWeb')
+      ExtWeb({ url: "resource://rawfile/hybrid1.html", asMixWeb:false});
     }
     .width('100%')
     .height('100%')

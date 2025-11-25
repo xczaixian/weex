@@ -51,6 +51,10 @@ export class ExtWebController {
     }
   }
 
+  public static delayExecute(methodName:Array<string> ) {
+    WebManager.getInstance().setDelayExecuteName(methodName)
+  }
+
   public static preRenderMixUrls(preRenderUrls: Array<string>) {
     if (ExtWebController.uiContext) {
       MixWebManager.getInstance().createPreRenderWebInstance(ExtWebController.uiContext, preRenderUrls);

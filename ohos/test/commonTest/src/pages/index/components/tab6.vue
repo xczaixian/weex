@@ -69,6 +69,10 @@
       <div class="btn-group">
         <text class="btn" @click="jumpPage('pick')">weex pick模块</text>
       </div>
+      <div class="btn-group">
+        <text class="font-title">virtual-list虚拟列表</text>
+        <text class="btn" @click="jumpPage('virtualList')">virtual-list</text>
+      </div>
     </scroller>
     <!-- 写onCancel会触发点击遮罩层关闭；写:copy="true"会触发copy -->
     <modal

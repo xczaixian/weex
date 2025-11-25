@@ -15,6 +15,7 @@ import Logger from '../../common/Logger';
 import { PageModel } from './PageModel';
 import { PageModelController } from './PageModelController';
 import { Constant } from '../common/constant/Constant';
+import { WebManager } from '../webmanger/WebManager';
 
 const TAG: string = 'DestinationPage';
 
@@ -23,10 +24,16 @@ export struct SubPage {
   @State pageModel: PageModel | undefined = PageModelController.getInstance().getCurrentPageModel();
 
   aboutToAppear(): void {
+    if (WebManager.getInstance().isPreRenderWeb(this.pageModel?.webId as number)) {
+      WebManager.getInstance().setIsForeground(this.pageModel?.webId as number, true)
+    }
     Logger.info(TAG, 'pageModel aboutToAppear');
   }
 
   aboutToDisappear(): void {
+    if (WebManager.getInstance().isPreRenderWeb(this.pageModel?.webId as number)) {
+      WebManager.getInstance().setIsForeground(this.pageModel?.webId as number, false)
+    }
     Logger.info(TAG, 'pageModel aboutToDisappear');
   }
 
@@ -52,7 +59,7 @@ export struct SubPage {
     .hideTitleBar(true)
     .onBackPressed(() => {
       Logger.info(TAG, 'pageModel onBackPressed');
-      return GlobalRouter.getInstance().onBackPress(1, true)
+      return GlobalRouter.getInstance().onBackPress(1, true, this.pageModel?.webId)
     })
   }
 }

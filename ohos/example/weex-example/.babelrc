@@ -9,12 +9,5 @@
       }
     ]
   ],
-  "plugins": [["@babel/plugin-transform-runtime"], [
-    "component",
-    {
-      "libraryName": "@umetrip/ume-weex-ui",
-      "libDir": "packages",
-      "style": false
-    }
-  ]]
+  "plugins": [["@babel/plugin-transform-runtime"]]
 }

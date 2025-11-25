@@ -1,14 +1,19 @@
 <template>
   <scroller class="scroller">
-    <div class="wrapper"
+    <div
+      class="wrapper"
       @viewappear="onviewappear"
       @viewdisappear="onviewdisappear"
     >
       <text class="nav">singlePage1页面</text>
       <div class="btn-group">
         <text class="font-title">navigator</text>
-        <text class="btn" @click="jumpPage('singlePage2')">push(singlePage2)</text>
-        <text class="btn" @click="jumpPage('singlePage6')">push(singlePage6)</text>
+        <text class="btn" @click="jumpPage('singlePage2')"
+          >push(singlePage2)</text
+        >
+        <text class="btn" @click="jumpPage('singlePage6')"
+          >push(singlePage6)</text
+        >
         <text class="btn" @click="navigatorPop()">pop</text>
       </div>
       <div class="btn-group">
@@ -23,6 +28,12 @@
         <text class="btn" @click="broadcastPost()">广播发送</text>
         <text class="btn" @click="broadcastOnmessage()">广播监听</text>
         <text class="btn" @click="broadcastClose()">关闭广播</text>
+      </div>
+      <div class="btn-group">
+        <text class="font-title">broadcastChannel native</text>
+        <text class="btn" @click="broadcastPostNative()">广播发送</text>
+        <text class="btn" @click="broadcastOnmessageNative()">广播监听</text>
+        <text class="btn" @click="broadcastCloseNative()">关闭广播</text>
       </div>
       <div class="btn-group">
         <text class="font-title">输入框</text>
@@ -58,9 +69,10 @@
 
 <script>
 import { pushPage } from "@/utils/index.js";
-const testbc = new BroadcastChannel('testbc');
-const globalEvent = weex.requireModule('globalEvent');
-const modal = weex.requireModule('modal');
+const testbc = new BroadcastChannel("testbc");
+const globalEvent = weex.requireModule("globalEvent");
+const modal = weex.requireModule("modal");
+const weexModule = weex.requireModule("weexModule");
 
 export default {
   components: {},
@@ -76,6 +88,47 @@ export default {
     });
   },
   methods: {
+    callback(val) {
+      console.log("ChannelMessage singlePage1 broadcastPostNative callback", JSON.stringify(val));
+    },
+    broadcastPostNative() {
+      const paramPost = {
+        type: "demo",
+        data: {
+          name: "singlePage1",
+          age: 18,
+        },
+      };
+      weexModule.callNative("channelPostMessage", paramPost, this.callback);
+    },
+    broadcastOnmessageNative() {
+      const paramOnMessage = {
+        type: "demo",
+        callback: true,
+      };
+      const callback = (val) => {
+        console.log(
+          "ChannelMessage entry singlePage1 broadcastOnmessageNative callback !!!!",
+          JSON.stringify(val)
+        );
+        let paramCallback = {
+          type: "demo",
+          params: {
+            name: "singlePage1",
+            age: 21,
+          },
+        };
+        weexModule.callNative("runpostMessageCallback", paramCallback);
+      };
+      weexModule.callNative("channelOnMessage", paramOnMessage, callback);
+    },
+    broadcastCloseNative() {
+      const paramClose = {
+        type: "demo",
+      };
+      weexModule.callNative("channelCloseMessage", paramClose);
+    },
+
     postMessageWeb() {
       WebMessage.postMessage(this.postMes);
     },
@@ -84,54 +137,63 @@ export default {
       pushPage(page, newParams);
     },
     navigatorPop() {
-      const navigator = weex.requireModule('navigator');
-      navigator.pop({
-       animated: "true"
-      }, event => {
-        console.log('callback: ', JSON.stringify(event))
-      });
+      const navigator = weex.requireModule("navigator");
+      navigator.pop(
+        {
+          animated: "true",
+        },
+        (event) => {
+          console.log("callback: ", JSON.stringify(event));
+        }
+      );
     },
     addForeground() {
-      globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', (res)=>{
-        console.log('Foreground callback successfully!');
-        modal.toast({message:'前台唤醒事件回调成功', duration:0.5})
-      });
-      modal.toast({message:'已添加前台监听', duration:0.5})
+      globalEvent.addEventListener(
+        "WXApplicationDidBecomeActiveEvent",
+        (res) => {
+          console.log("Foreground callback successfully!");
+          modal.toast({ message: "前台唤醒事件回调成功", duration: 0.5 });
+        }
+      );
+      modal.toast({ message: "已添加前台监听", duration: 0.5 });
     },
     removeForeground() {
-      globalEvent.removeEventListener('WXApplicationDidBecomeActiveEvent');
-      console.log('removeEventListener html callback');
-      modal.toast({message:'已取消监听', duration:0.5})
+      globalEvent.removeEventListener("WXApplicationDidBecomeActiveEvent");
+      console.log("removeEventListener html callback");
+      modal.toast({ message: "已取消监听", duration: 0.5 });
     },
     addBackground() {
-      globalEvent.addEventListener('WXApplicationWillResignActiveEvent', (res)=>{
-        console.log('Background callback successfully!');
-        modal.toast({message:'后台监听事件回调成功', duration:0.5})
-      });
-      modal.toast({message:'已添加后台监听', duration:0.5})
+      globalEvent.addEventListener(
+        "WXApplicationWillResignActiveEvent",
+        (res) => {
+          console.log("Background callback successfully!");
+          modal.toast({ message: "后台监听事件回调成功", duration: 0.5 });
+        }
+      );
+      modal.toast({ message: "已添加后台监听", duration: 0.5 });
     },
     removeBackground() {
-      globalEvent.removeEventListener('WXApplicationWillResignActiveEvent');
-      console.log('removeEventListener html callback');
-      modal.toast({message:'已取消监听', duration:0.5})
+      globalEvent.removeEventListener("WXApplicationWillResignActiveEvent");
+      console.log("removeEventListener html callback");
+      modal.toast({ message: "已取消监听", duration: 0.5 });
     },
     broadcastPost() {
-      testbc.postMessage('来自singlePage1的消息test message!');
+      testbc.postMessage("来自singlePage1的消息test message!");
     },
     broadcastOnmessage() {
-      testbc.onmessage = (event)=>{
+      testbc.onmessage = (event) => {
         console.log("singlePage1收到消息：" + JSON.stringify(event.data));
-      }
+      };
     },
     onviewappear() {
-      console.log('onviewAppear singlePage1 ...')
+      console.log("onviewAppear singlePage1 ...");
     },
     onviewdisappear() {
-      console.log('onviewDisappear singlePage1 ...')
+      console.log("onviewDisappear singlePage1 ...");
     },
     broadcastClose() {
       testbc.close();
-      modal.toast({message:'已关闭广播', duration:0.5})
+      modal.toast({ message: "已关闭广播", duration: 0.5 });
     },
   },
 };

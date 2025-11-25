@@ -31,6 +31,7 @@ import { NativeLottieBuilder } from '../samelayer/nativeComponents/Lottie/Lottie
 import { NativeRichTextBuilder } from '../samelayer/nativeComponents/RichText/RichText';
 import { NativeTextAreaBuilder } from '../samelayer/nativeComponents/TextArea/TextArea';
 import { NativeWebBuilder } from '../samelayer/nativeComponents/Web/Web';
+import { NativeLoginWithHuaweiIDButtonBuilder } from '../samelayer/nativeComponents/LoginWithHuaweiIDButton/LoginWithHuaweiIDButton';
 
 import webview from '@ohos.web.webview';
 import { ParseUtil } from 'WebSceneKitHsp/src/main/ets/webrouterservice/common/util/ParseUtil';
@@ -68,7 +69,6 @@ export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
     console.log('TestXXX EntryAbility onCreate');
-    AdvancedAPI.init(this.context);
     GlobalThis.getInstance().setContext("GlobalContext", this.context)
     sameLayerManager.registerNativeComponentBuilders('video', NativeVideoBuilder)
     sameLayerManager.registerNativeComponentBuilders('button', NativeButtonBuilder)
@@ -77,6 +77,7 @@ export default class EntryAbility extends UIAbility {
     sameLayerManager.registerNativeComponentBuilders('richText', NativeRichTextBuilder)
     sameLayerManager.registerNativeComponentBuilders('textArea', NativeTextAreaBuilder)
     sameLayerManager.registerNativeComponentBuilders('web', NativeWebBuilder)
+    sameLayerManager.registerNativeComponentBuilders('hwidbtn', NativeLoginWithHuaweiIDButtonBuilder)
   }
 
   onDestroy() {
@@ -84,6 +85,9 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
+    let windowClass = windowStage.getMainWindowSync()
+    AppStorage.setOrCreate('windowClass',windowClass);
+    AdvancedAPI.init(this.context, windowClass);
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
     ExtWebController.setUA('');
@@ -98,6 +102,7 @@ export default class EntryAbility extends UIAbility {
       AppStorage.setOrCreate("uiContext", windowStage.getMainWindowSync().getUIContext());
       hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
       AppStorage.setOrCreate<UIContext>("UIContext", windowStage.getMainWindowSync().getUIContext());
+      AppStorage.setOrCreate<boolean>('isOnForeground', true);
     });
   }
 
@@ -107,11 +112,13 @@ export default class EntryAbility extends UIAbility {
   }
 
   onForeground() {
+    AppStorage.set<boolean>('isOnForeground', true);
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onForeground');
     ExtWebController.triggerEvent('WXApplicationDidBecomeActiveEvent');
   }
 
   onBackground() {
+    AppStorage.set<boolean>('isOnForeground', false);
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onBackground');
     ExtWebController.triggerEvent('WXApplicationWillResignActiveEvent');
   }

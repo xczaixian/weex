@@ -1,5 +1,5 @@
 import Binding from 'weex-bindingx';
-const weexModule = weex.requireModule('weexModule') 
+const weexModule = weex.requireModule('weexModule')
 
 
 /**
@@ -8,12 +8,12 @@ const weexModule = weex.requireModule('weexModule')
 const appearOrDisappearMap = []
 
 // 阻止冒泡事件
-function stopModifier(e){
+function stopModifier(e) {
   e.stopPropagation()
 }
 
 // 阻止默认事件
-function preventModifier(e){
+function preventModifier(e) {
   e.cancelable && e.preventDefault();
 }
 
@@ -22,8 +22,14 @@ const modifierMap = new Map([
   ['prevent', preventModifier],
 ])
 
+const eventMap = [
+  'event',
+  '$event',
+  'e'
+]
+
 // touchstart 手势事件
-function touchstart(elements, touchEventMap){
+function touchstart(elements, touchEventMap) {
   // 放缩倍率
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
@@ -32,9 +38,8 @@ function touchstart(elements, touchEventMap){
   const modifiers = touchEventMap.modifier
 
   elementArray.forEach((element) => {
-    element.addEventListener('touchstart', (event) =>{
-      
-      if(typeof callback == 'function') {
+    let handleTouchStart = function (event) {
+      if (typeof callback == 'function') {
         const callbackParams = {
           changedTouches: [{
             identifier: event.changedTouches[0].identifier,
@@ -45,19 +50,19 @@ function touchstart(elements, touchEventMap){
             force: event.changedTouches[0].force
           }]
         }
-        if(params.length == 0) {
+        if (params.length == 0) {
           callback(callbackParams)
         } else {
           const paramsArray = []
           const firstParam = params[0]
-          if(firstParam == 'event') {
+          if (eventMap.includes(firstParam)) {
             paramsArray.push(callbackParams)
             params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
+              const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           } else {
-              params.forEach((item) => {
+            params.forEach((item) => {
               const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
@@ -70,12 +75,14 @@ function touchstart(elements, touchEventMap){
       modifiers.forEach((modifier) => {
         modifierMap.get(modifier)(event)
       })
-    })
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchstart', handleTouchStart)
   })
 }
 
 // touchmove 手势事件
-function touchmove(elements, touchEventMap){
+function touchmove(elements, touchEventMap) {
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
@@ -83,8 +90,8 @@ function touchmove(elements, touchEventMap){
   const modifiers = touchEventMap.modifier
 
   elementArray.forEach((element) => {
-    element.addEventListener('touchmove', (event) =>{
-      if(typeof callback == 'function') {
+    let handleTouchMove = function (event) {
+      if (typeof callback == 'function') {
         const callbackParams = {
           changedTouches: [{
             identifier: event.changedTouches[0].identifier,
@@ -95,19 +102,19 @@ function touchmove(elements, touchEventMap){
             force: event.changedTouches[0].force
           }]
         }
-        if(params.length == 0) {
+        if (params.length == 0) {
           callback(callbackParams)
         } else {
           const paramsArray = []
           const firstParam = params[0]
-          if(firstParam == 'event') {
+          if (eventMap.includes(firstParam)) {
             paramsArray.push(callbackParams)
             params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
+              const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           } else {
-              params.forEach((item) => {
+            params.forEach((item) => {
               const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
@@ -119,21 +126,23 @@ function touchmove(elements, touchEventMap){
       modifiers.forEach((modifier) => {
         modifierMap.get(modifier)(event)
       })
-    })
+    }
+    element.removeEventListener('touchmove', handleTouchMove)
+    element.addEventListener('touchmove', handleTouchMove)
   })
 }
 
 // touchend 手势事件
-function touchend(elements, touchEventMap){
+function touchend(elements, touchEventMap) {
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
   const callback = touchEventMap.handler
   const modifiers = touchEventMap.modifier
-  
+
   elementArray.forEach((element) => {
-    element.addEventListener('touchend', (event) =>{
-      if(typeof callback == 'function') {
+    let handleTouchEnd = function (event) {
+      if (typeof callback == 'function') {
         const callbackParams = {
           changedTouches: [{
             identifier: event.changedTouches[0].identifier,
@@ -144,19 +153,19 @@ function touchend(elements, touchEventMap){
             force: event.changedTouches[0].force
           }]
         }
-        if(params.length == 0) {
+        if (params.length == 0) {
           callback(callbackParams)
         } else {
           const paramsArray = []
           const firstParam = params[0]
-          if(firstParam == 'event') {
+          if (eventMap.includes(firstParam)) {
             paramsArray.push(callbackParams)
             params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
+              const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           } else {
-              params.forEach((item) => {
+            params.forEach((item) => {
               const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
@@ -169,287 +178,28 @@ function touchend(elements, touchEventMap){
       modifiers.forEach((modifier) => {
         modifierMap.get(modifier)(event)
       })
-    })
+    }
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchend', handleTouchEnd)
   })
 }
 
 // horizontalpan 手势事件，当用户水平滑动时会触发
-function horizontalpan(elements, touchEventMap){
+function horizontalpan(elements, touchEventMap) {
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
   const callback = touchEventMap.handler
 
   elementArray.forEach((element) => {
-      // 定义变量记录触摸时的初始位置
-      let startX = 0
-      let endX = 0
-      let startY = 0
-      let endY = 0
-
-      element.addEventListener('touchstart', (event) => {
-        startX = event.touches[0].pageX
-        startY = event.touches[0].pageY
-        const callbackParams = {
-          state: 'start',
-          changedTouches: [{
-            identifier: event.changedTouches[0].identifier,
-            pageX: event.changedTouches[0].pageX,
-            pageY: event.changedTouches[0].pageY,
-            screenX: event.changedTouches[0].screenX * rate,
-            screenY: event.changedTouches[0].screenY * rate,
-            force: event.changedTouches[0].force
-          }]
-        }
-        callback(callbackParams)
-      })
-      element.addEventListener('touchmove', (event) => {
-        const callbackParams = {
-          state: 'move',
-          changedTouches: [{
-            identifier: event.changedTouches[0].identifier,
-            pageX: event.changedTouches[0].pageX,
-            pageY: event.changedTouches[0].pageY,
-            screenX: event.changedTouches[0].screenX * rate,
-            screenY: event.changedTouches[0].screenY * rate,
-            force: event.changedTouches[0].force
-          }]
-        }
-        callback(callbackParams)
-      })
-      element.addEventListener('touchend', (event) => {
-        endX = event.changedTouches[0].pageX;
-        const dx = endX - startX
-        if(Math.abs(dx) > 10) {
-          const callbackParams = {
-            state: 'end',
-            changedTouches: [{
-              identifier: event.changedTouches[0].identifier,
-              pageX: event.changedTouches[0].pageX,
-              pageY: event.changedTouches[0].pageY,
-              screenX: event.changedTouches[0].screenX * rate,
-              screenY: event.changedTouches[0].screenY * rate,
-              force: event.changedTouches[0].force
-            }]
-          }
-          if(params.length == 0) {
-            callback(callbackParams)
-          } else {
-            const paramsArray = []
-            const firstParam = params[0]
-            if(firstParam == 'event') {
-              paramsArray.push(callbackParams)
-              params.slice(1).forEach((item) => {
-                const attrValue = element.attrs[item]
-                paramsArray.push(attrValue)
-              })
-            } else {
-                params.forEach((item) => {
-                const attrValue = element.getAttribute(item)
-                paramsArray.push(attrValue)
-              })
-            }
-            callback(...paramsArray)
-          }
-        }
-      })
-  })
-}
-
-// longpress 手势事件
-function longpress(elements, touchEventMap){
-  const rate = 750 / document.documentElement.clientWidth
-  const elementArray = Array.from(elements)
-  const params = touchEventMap.params
-  const callback = touchEventMap.handler
-
-  elementArray.forEach((element) => {
-    let start = 0
-    element.addEventListener('touchstart', (event) => {
-        start = Date.now()
-    });
-  
-    element.addEventListener('touchend', (event) => {
-        let currenttime = Date.now()
-        if (currenttime - start > 500) {
-          const callbackParams = {
-            changedTouches: [{
-              identifier: event.changedTouches[0].identifier,
-              pageX: event.changedTouches[0].pageX,
-              pageY: event.changedTouches[0].pageY,
-              screenX: event.changedTouches[0].screenX * rate,
-              screenY: event.changedTouches[0].screenY * rate,
-              force: event.changedTouches[0].force
-            }]
-          }
-          if(params.length == 0) {
-            callback(callbackParams)
-          } else {
-            const paramsArray = []
-            const firstParam = params[0]
-            if(firstParam == 'event') {
-              paramsArray.push(callbackParams)
-              params.slice(1).forEach((item) => {
-                const attrValue = element.attrs[item]
-                paramsArray.push(attrValue)
-              })
-            } else {
-                params.forEach((item) => {
-                const attrValue = element.getAttribute(item)
-                paramsArray.push(attrValue)
-              })
-            }
-            callback(...paramsArray)
-          }
-        }
-      }
-    )
-  })
-}
-
-// panstart 手势事件
-function panstart(elements, touchEventMap){
-  const rate = 750 / document.documentElement.clientWidth
-  const elementArray = Array.from(elements)
-  const params = touchEventMap.params
-  const callback = touchEventMap.handler
-  elementArray.forEach((element) => {
-    element.addEventListener('touchstart', (event) =>{
-      if(typeof callback == 'function') {
-        const callbackParams = {
-          changedTouches: [{
-            identifier: event.changedTouches[0].identifier,
-            pageX: event.changedTouches[0].pageX,
-            pageY: event.changedTouches[0].pageY,
-            screenX: event.changedTouches[0].screenX * rate,
-            screenY: event.changedTouches[0].screenY * rate,
-            force: event.changedTouches[0].force
-          }]
-        }
-        if(params.length == 0) {
-          callback(callbackParams)
-        } else {
-          const paramsArray = []
-          const firstParam = params[0]
-          if(firstParam == 'event') {
-            paramsArray.push(callbackParams)
-            params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
-              paramsArray.push(attrValue)
-            })
-          } else {
-              params.forEach((item) => {
-              const attrValue = element.getAttribute(item)
-              paramsArray.push(attrValue)
-            })
-          }
-          callback(...paramsArray)
-        }
-      }
-    })
-  })
-}
-
-// panmove 手势事件
-function panmove(elements, touchEventMap){
-  const rate = 750 / document.documentElement.clientWidth
-  const elementArray = Array.from(elements)
-  const params = touchEventMap.params
-  const callback = touchEventMap.handler
-
-  elementArray.forEach((element) => {
-    element.addEventListener('touchmove', (event) =>{
-      if(typeof callback == 'function') {
-        const callbackParams = {
-          changedTouches: [{
-            identifier: event.changedTouches[0].identifier,
-            pageX: event.changedTouches[0].pageX,
-            pageY: event.changedTouches[0].pageY,
-            screenX: event.changedTouches[0].screenX * rate,
-            screenY: event.changedTouches[0].screenY * rate,
-            force: event.changedTouches[0].force
-          }]
-        }
-        if(params.length == 0) {
-          callback(callbackParams)
-        } else {
-          const paramsArray = []
-          const firstParam = params[0]
-          if(firstParam == 'event') {
-            paramsArray.push(callbackParams)
-            params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
-              paramsArray.push(attrValue)
-            })
-          } else {
-              params.forEach((item) => {
-              const attrValue = element.getAttribute(item)
-              paramsArray.push(attrValue)
-            })
-          }
-          callback(...paramsArray)
-        }
-      }
-    })
-  })
-}
-
-// panend 手势事件
-function panend(elements, touchEventMap){
-  const rate = 750 / document.documentElement.clientWidth
-  const elementArray = Array.from(elements)
-  const params = touchEventMap.params
-  const callback = touchEventMap.handler
-
-  elementArray.forEach((element) => {
-    element.addEventListener('touchend', (event) =>{
-      if(typeof callback == 'function') {
-        const callbackParams = {
-          changedTouches: [{
-            identifier: event.changedTouches[0].identifier,
-            pageX: event.changedTouches[0].pageX,
-            pageY: event.changedTouches[0].pageY,
-            screenX: event.changedTouches[0].screenX * rate,
-            screenY: event.changedTouches[0].screenY * rate,
-            force: event.changedTouches[0].force
-          }]
-        }
-        if(params.length == 0) {
-          callback(callbackParams)
-        } else {
-          const paramsArray = []
-          const firstParam = params[0]
-          if(firstParam == 'event') {
-            paramsArray.push(callbackParams)
-            params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
-              paramsArray.push(attrValue)
-            })
-          } else {
-              params.forEach((item) => {
-              const attrValue = element.getAttribute(item)
-              paramsArray.push(attrValue)
-            })
-          }
-          callback(...paramsArray)
-        }
-      }
-    })
-  })
-}
-
-// verticalpan 手势事件, 用户垂直滑动时触发
-function verticalpan(elements, touchEventMap){
-  const rate = 750 / document.documentElement.clientWidth
-  const elementArray = Array.from(elements)
-  const params = touchEventMap.params
-  const callback = touchEventMap.handler
-
-  elementArray.forEach((element) => {
+    // 定义变量记录触摸时的初始位置
+    let startX = 0
+    let endX = 0
     let startY = 0
     let endY = 0
-  
-    element.addEventListener('touchstart', (event) => {
+
+    let handleTouchStart = function (event) {
+      startX = event.touches[0].pageX
       startY = event.touches[0].pageY
       const callbackParams = {
         state: 'start',
@@ -463,8 +213,8 @@ function verticalpan(elements, touchEventMap){
         }]
       }
       callback(callbackParams)
-    })
-    element.addEventListener('touchmove', (event) => {
+    }
+    let handleTouchMove = function (event) {
       const callbackParams = {
         state: 'move',
         changedTouches: [{
@@ -477,11 +227,11 @@ function verticalpan(elements, touchEventMap){
         }]
       }
       callback(callbackParams)
-    })
-    element.addEventListener('touchend', (event) => {
-      endY = event.changedTouches[0].pageY;
-      const dy = endY - startY
-      if(Math.abs(dy) > 5) {
+    }
+    let handleTouchEnd = function (event) {
+      endX = event.changedTouches[0].pageX;
+      const dx = endX - startX
+      if (Math.abs(dx) > 10) {
         const callbackParams = {
           state: 'end',
           changedTouches: [{
@@ -493,19 +243,19 @@ function verticalpan(elements, touchEventMap){
             force: event.changedTouches[0].force
           }]
         }
-        if(params.length == 0) {
+        if (params.length == 0) {
           callback(callbackParams)
         } else {
           const paramsArray = []
           const firstParam = params[0]
-          if(firstParam == 'event') {
+          if (eventMap.includes(firstParam)) {
             paramsArray.push(callbackParams)
             params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
+              const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           } else {
-              params.forEach((item) => {
+            params.forEach((item) => {
               const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
@@ -513,12 +263,293 @@ function verticalpan(elements, touchEventMap){
           callback(...paramsArray)
         }
       }
-    })
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.removeEventListener('touchmove', handleTouchMove)
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchmove', handleTouchMove)
+    element.addEventListener('touchend', handleTouchEnd)
+  })
+}
+
+// longpress 手势事件
+function longpress(elements, touchEventMap) {
+  const rate = 750 / document.documentElement.clientWidth
+  const elementArray = Array.from(elements)
+  const params = touchEventMap.params
+  const callback = touchEventMap.handler
+
+  elementArray.forEach((element) => {
+    let start = 0
+    let handleTouchStart = function (event) {
+      start = Date.now()
+    }
+    let handleTouchEnd = function (event) {
+      let currenttime = Date.now()
+      if (currenttime - start > 500) {
+        const callbackParams = {
+          changedTouches: [{
+            identifier: event.changedTouches[0].identifier,
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+            screenX: event.changedTouches[0].screenX * rate,
+            screenY: event.changedTouches[0].screenY * rate,
+            force: event.changedTouches[0].force
+          }]
+        }
+        if (params.length == 0) {
+          callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            params.slice(1).forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            params.forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          }
+          callback(...paramsArray)
+        }
+      }
+    }
+    element.removeEventListener('touchstart', handleTouchStart);
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchstart', handleTouchStart);
+    element.addEventListener('touchend', handleTouchEnd)
+  })
+}
+
+// panstart 手势事件
+function panstart(elements, touchEventMap) {
+  const rate = 750 / document.documentElement.clientWidth
+  const elementArray = Array.from(elements)
+  const params = touchEventMap.params
+  const callback = touchEventMap.handler
+  elementArray.forEach((element) => {
+    let handleTouchStart = function(event) {
+      if (typeof callback == 'function') {
+        const callbackParams = {
+          changedTouches: [{
+            identifier: event.changedTouches[0].identifier,
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+            screenX: event.changedTouches[0].screenX * rate,
+            screenY: event.changedTouches[0].screenY * rate,
+            force: event.changedTouches[0].force
+          }]
+        }
+        if (params.length == 0) {
+          callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            params.slice(1).forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            params.forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          }
+          callback(...paramsArray)
+        }
+      }
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchstart', handleTouchStart)
+  })
+}
+
+// panmove 手势事件
+function panmove(elements, touchEventMap) {
+  const rate = 750 / document.documentElement.clientWidth
+  const elementArray = Array.from(elements)
+  const params = touchEventMap.params
+  const callback = touchEventMap.handler
+
+  elementArray.forEach((element) => {
+    let handleTouchMove = function(event) {
+      if (typeof callback == 'function') {
+        const callbackParams = {
+          changedTouches: [{
+            identifier: event.changedTouches[0].identifier,
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+            screenX: event.changedTouches[0].screenX * rate,
+            screenY: event.changedTouches[0].screenY * rate,
+            force: event.changedTouches[0].force
+          }]
+        }
+        if (params.length == 0) {
+          callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            params.slice(1).forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            params.forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          }
+          callback(...paramsArray)
+        }
+      }
+    }
+    element.removeEventListener('touchmove', handleTouchMove)
+    element.addEventListener('touchmove', handleTouchMove)
+  })
+}
+
+// panend 手势事件
+function panend(elements, touchEventMap) {
+  const rate = 750 / document.documentElement.clientWidth
+  const elementArray = Array.from(elements)
+  const params = touchEventMap.params
+  const callback = touchEventMap.handler
+
+  elementArray.forEach((element) => {
+    let handleTouchEnd = function(event) {
+      if (typeof callback == 'function') {
+        const callbackParams = {
+          changedTouches: [{
+            identifier: event.changedTouches[0].identifier,
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+            screenX: event.changedTouches[0].screenX * rate,
+            screenY: event.changedTouches[0].screenY * rate,
+            force: event.changedTouches[0].force
+          }]
+        }
+        if (params.length == 0) {
+          callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            params.slice(1).forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            params.forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          }
+          callback(...paramsArray)
+        }
+      }
+    }
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchend', handleTouchEnd)
+  })
+}
+
+// verticalpan 手势事件, 用户垂直滑动时触发
+function verticalpan(elements, touchEventMap) {
+  const rate = 750 / document.documentElement.clientWidth
+  const elementArray = Array.from(elements)
+  const params = touchEventMap.params
+  const callback = touchEventMap.handler
+
+  elementArray.forEach((element) => {
+    let startY = 0
+    let endY = 0
+    let handleTouchStart = function(event) {
+      startY = event.touches[0].pageY
+      const callbackParams = {
+        state: 'start',
+        changedTouches: [{
+          identifier: event.changedTouches[0].identifier,
+          pageX: event.changedTouches[0].pageX,
+          pageY: event.changedTouches[0].pageY,
+          screenX: event.changedTouches[0].screenX * rate,
+          screenY: event.changedTouches[0].screenY * rate,
+          force: event.changedTouches[0].force
+        }]
+      }
+      callback(callbackParams)
+    }
+    let handleTouchMove = function(event) {
+      const callbackParams = {
+        state: 'move',
+        changedTouches: [{
+          identifier: event.changedTouches[0].identifier,
+          pageX: event.changedTouches[0].pageX,
+          pageY: event.changedTouches[0].pageY,
+          screenX: event.changedTouches[0].screenX * rate,
+          screenY: event.changedTouches[0].screenY * rate,
+          force: event.changedTouches[0].force
+        }]
+      }
+      callback(callbackParams)
+    }
+    let handleTouchEnd = function(event) {
+      endY = event.changedTouches[0].pageY;
+      const dy = endY - startY
+      if (Math.abs(dy) > 5) {
+        const callbackParams = {
+          state: 'end',
+          changedTouches: [{
+            identifier: event.changedTouches[0].identifier,
+            pageX: event.changedTouches[0].pageX,
+            pageY: event.changedTouches[0].pageY,
+            screenX: event.changedTouches[0].screenX * rate,
+            screenY: event.changedTouches[0].screenY * rate,
+            force: event.changedTouches[0].force
+          }]
+        }
+        if (params.length == 0) {
+          callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            params.slice(1).forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            params.forEach((item) => {
+              const attrValue = element.getAttribute(item)
+              paramsArray.push(attrValue)
+            })
+          }
+          callback(...paramsArray)
+        }
+      }
+    }
+
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.removeEventListener('touchmove', handleTouchMove)
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchmove', handleTouchMove)
+    element.addEventListener('touchend', handleTouchEnd)
   })
 }
 
 // swipe 手势事件，swipe 将会在用户在屏幕上滑动时触发，一次连续的滑动只会触发一次 swipe 手势
-function swipe(elements, touchEventMap){
+function swipe(elements, touchEventMap) {
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
@@ -529,16 +560,15 @@ function swipe(elements, touchEventMap){
     let startY = 0
     let endX = 0
     let endY = 0
-  
-    element.addEventListener('touchstart', (event) => {
+
+    let handleTouchStart = function(event) {
       startX = event.touches[0].pageX
       startY = event.touches[0].pageY
-    })
-  
-    element.addEventListener('touchend', (event) => {
+    }
+    let handleTouchEnd = function(event) {
       endX = event.changedTouches[0].pageX
       endY = event.changedTouches[0].pageY
-  
+
       const dx = endX - startX
       const dy = endY - startY
       const callbackParams = {
@@ -552,55 +582,58 @@ function swipe(elements, touchEventMap){
           force: event.changedTouches[0].force
         }]
       }
-      if(dx >= 10 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx >= 10 && Math.abs(dx) > Math.abs(dy)) {
         // 向右滑动
         callbackParams.direction = 'right'
-      } else if(dx <= -10 && Math.abs(dx) > Math.abs(dy)) {
+      } else if (dx <= -10 && Math.abs(dx) > Math.abs(dy)) {
         // 向左滑动
         callbackParams.direction = 'left'
-      } else if(dy >= 10 && Math.abs(dy) > Math.abs(dx)) {
+      } else if (dy >= 10 && Math.abs(dy) > Math.abs(dx)) {
         // 向下滑动
         callbackParams.direction = 'bottom'
-      } else if(dy <= -10 && Math.abs(dy) > Math.abs(dx)) {
+      } else if (dy <= -10 && Math.abs(dy) > Math.abs(dx)) {
         // 向上滑动
         callbackParams.direction = 'up'
       }
 
-      if(params.length == 0) {
+      if (params.length == 0) {
         callback(callbackParams)
       } else {
         const paramsArray = []
         const firstParam = params[0]
-        if(firstParam == 'event') {
+        if (eventMap.includes(firstParam)) {
           paramsArray.push(callbackParams)
           params.slice(1).forEach((item) => {
-            const attrValue = element.attrs[item]
+            const attrValue = element.getAttribute(item)
             paramsArray.push(attrValue)
           })
         } else {
-            params.forEach((item) => {
+          params.forEach((item) => {
             const attrValue = element.getAttribute(item)
             paramsArray.push(attrValue)
           })
         }
         callback(...paramsArray)
       }
-
-    })
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.removeEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchend', handleTouchEnd)
   })
 }
 
 
 // stopPropagation 手势事件
-function stopPropagation(elements, touchEventMap){
+function stopPropagation(elements, touchEventMap) {
   const rate = 750 / document.documentElement.clientWidth
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
   const callback = touchEventMap.handler
 
   elementArray.forEach((element) => {
-    element.addEventListener('touchstart', (event) => {
-      if(typeof callback == 'function') {
+    let handleTouchStart = function(event) {
+      if (typeof callback == 'function') {
         const callbackParams = {
           changedTouches: [{
             identifier: event.changedTouches[0].identifier,
@@ -611,46 +644,48 @@ function stopPropagation(elements, touchEventMap){
             force: event.changedTouches[0].force
           }]
         }
-        if(params.length == 0) {
+        if (params.length == 0) {
           const result = callback(callbackParams)
-          if(result) {
+          if (result) {
             event.stopPropagation()
           }
         } else {
           const paramsArray = []
           const firstParam = params[0]
-          if(firstParam == 'event') {
+          if (eventMap.includes(firstParam)) {
             paramsArray.push(callbackParams)
             params.slice(1).forEach((item) => {
-              const attrValue = element.attrs[item]
+              const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           } else {
-              params.forEach((item) => {
+            params.forEach((item) => {
               const attrValue = element.getAttribute(item)
               paramsArray.push(attrValue)
             })
           }
           const result = callback(...paramsArray)
-          if(result) {
+          if (result) {
             event.stopPropagation()
           }
         }
       }
-    })
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchstart', handleTouchStart)
   })
 }
-function getEl(el){
+function getEl(el) {
   if (typeof el === 'string' || typeof el === 'number') return el;
   return el
 }
-function computeItemIndex(listChangeHeight){
+function computeItemIndex(listChangeHeight) {
   return Math.round(listChangeHeight / document.documentElement.clientHeight) + 1
 }
 
 var __listChangeHeight__ = 0    // list列表移动的偏移量     该值 > 0
 
-function BindingXCallback(dy,height, element, type, startHeight){
+function BindingXCallback(dy, height, element, type, startHeight) {
   // dy: BindingX高度跟随的距离
   // height: 手机可视区高度
   // element: List元素
@@ -672,109 +707,109 @@ function BindingXCallback(dy,height, element, type, startHeight){
     type = 'oneCell'
   }
 
-  if(computeItemIndex(__listChangeHeight__) == 1 && dy < 0) {         // index = 1 向上滑动
-    if(type === 'speed') {
+  if (computeItemIndex(__listChangeHeight__) == 1 && dy < 0) {         // index = 1 向上滑动
+    if (type === 'speed') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy)) * (-1)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ + deviceHeight
       startHeight.height = startHeight.height - deviceHeight * rate
-    } else if(type === 'distance'){
+    } else if (type === 'distance') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy)) * (-1)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ + deviceHeight
       startHeight.height = startHeight.height - deviceHeight * rate
-    } else if(type === 'reback' || type === 'oneCell') {
+    } else if (type === 'reback' || type === 'oneCell') {
       changed_distance = Math.abs(dy)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     }
     direction = 'up'
-  } else if(computeItemIndex(__listChangeHeight__) == 1 && dy > 0){         // index = 1 向下滑动
+  } else if (computeItemIndex(__listChangeHeight__) == 1 && dy > 0) {         // index = 1 向下滑动
     type = 'reback'
     changed_distance = Math.abs(dy) * (-1)
     changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
     changed_start = changed_start_length * (-1)
     translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     direction = 'down'
-  } else if(computeItemIndex(__listChangeHeight__) === parseInt(listHeight / height) && dy < 0){          // index = lastone 向上滑动
+  } else if (computeItemIndex(__listChangeHeight__) === parseInt(listHeight / height) && dy < 0) {          // index = lastone 向上滑动
     type = 'reback'
     changed_distance = Math.abs(dy)
     changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
     changed_start = changed_start_length * (-1)
     translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     direction = 'up'
-  } else if(computeItemIndex(__listChangeHeight__) === parseInt(listHeight / height) && dy > 0){          // index = lastone 向下滑动
-    if(type === 'speed') {
+  } else if (computeItemIndex(__listChangeHeight__) === parseInt(listHeight / height) && dy > 0) {          // index = lastone 向下滑动
+    if (type === 'speed') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy))
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ - deviceHeight
       startHeight.height = startHeight.height + deviceHeight * rate
-    } else if(type === 'distance'){
+    } else if (type === 'distance') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy))
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ - deviceHeight
       startHeight.height = startHeight.height + deviceHeight * rate
-    } else if(type === 'reback') {
+    } else if (type === 'reback') {
       changed_distance = Math.abs(dy) * (-1)
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     }
     direction = 'down'
-  } else if(computeItemIndex(__listChangeHeight__) > 1 && dy < 0){          // index !== 1 && index !== lastone 向上滑动
-    if(type === 'speed') {
+  } else if (computeItemIndex(__listChangeHeight__) > 1 && dy < 0) {          // index !== 1 && index !== lastone 向上滑动
+    if (type === 'speed') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy)) * (-1)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ + deviceHeight
       startHeight.height = startHeight.height - deviceHeight * rate
-    } else if(type === 'distance'){
+    } else if (type === 'distance') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy)) * (-1)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ + deviceHeight
       startHeight.height = startHeight.height - deviceHeight * rate
-    } else if(type === 'reback') {
+    } else if (type === 'reback') {
       changed_distance = Math.abs(dy)
       changed_start_length = __listChangeHeight__ * rate + Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     }
     direction = 'up'
-  } else if(computeItemIndex(__listChangeHeight__) != 1 && dy > 0){         // index !== 1 && index !== lastone 向下滑动
-    if(type === 'speed') {
+  } else if (computeItemIndex(__listChangeHeight__) != 1 && dy > 0) {         // index !== 1 && index !== lastone 向下滑动
+    if (type === 'speed') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy))
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ - deviceHeight
       startHeight.height = startHeight.height + deviceHeight * rate
-    } else if(type === 'distance'){
+    } else if (type === 'distance') {
       changed_distance = ((deviceHeight) * rate - Math.abs(dy))
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
       __listChangeHeight__ = __listChangeHeight__ - deviceHeight
       startHeight.height = startHeight.height + deviceHeight * rate
-    } else if(type === 'reback') {
+    } else if (type === 'reback') {
       changed_distance = Math.abs(dy) * (-1)
       changed_start_length = __listChangeHeight__ * rate - Math.abs(dy)
       changed_start = changed_start_length * (-1)
       translate_y_origin = `${changed_start} + ${changed_distance}*(min(t, 200)/200)`
     }
     direction = 'down'
-  } 
+  }
 
   Binding.bind(
     {
@@ -789,17 +824,17 @@ function BindingXCallback(dy,height, element, type, startHeight){
       ],
     },
     function (e) {
-      if(e.state === 'start'){
+      if (e.state === 'start') {
         startHeight.isAnimate = true
         Binding.unbind({
-          eventType:'pan',
+          eventType: 'pan',
           token: __GlobalToken__
         })
         __GlobalToken__ = undefined
       }
-      if(e.state === 'exit') {
+      if (e.state === 'exit') {
         startHeight.isAnimate = false
-        if(type === 'speed' || type === 'distance') {
+        if (type === 'speed' || type === 'distance') {
           const timer = setTimeout(() => {
             let el = computeItemIndex(__listChangeHeight__) - 1
             let fixDistance = myList.children[el].getBoundingClientRect().top    // 向上：正数   向下：负数
@@ -815,27 +850,27 @@ function BindingXCallback(dy,height, element, type, startHeight){
 
           // 先隐藏调用后显示调用
           appearOrDisappearMap.forEach((item) => {
-            if(item.state === 'appear') {
-              if(item.event.disappear?.callback) {
+            if (item.state === 'appear') {
+              if (item.event.disappear?.callback) {
                 const callbackParams = {
                   type: 'disappear',
                   target: item.element,
                   direction: direction,
-                  timestamp: Date.now() 
+                  timestamp: Date.now()
                 }
-                if(item.event.disappear?.params.length == 0) {
+                if (item.event.disappear?.params.length == 0) {
                   item.event.disappear.callback(callbackParams)
                 } else {
                   const paramsArray = []
                   const firstParam = item.event.disappear?.params[0]
-                  if(firstParam == 'event') {
+                  if (eventMap.includes(firstParam)) {
                     paramsArray.push(callbackParams)
-                      item.event.disappear?.params.slice(1).forEach((key) => {
+                    item.event.disappear?.params.slice(1).forEach((key) => {
                       const attrValue = item.element.getAttribute(key)
                       paramsArray.push(attrValue)
                     })
                   } else {
-                      item.event.disappear?.params.forEach((key) => {
+                    item.event.disappear?.params.forEach((key) => {
                       const attrValue = item.element.getAttribute(key)
                       paramsArray.push(attrValue)
                     })
@@ -848,27 +883,27 @@ function BindingXCallback(dy,height, element, type, startHeight){
           })
 
           appearOrDisappearMap.forEach((item) => {
-            if(isInViewport(item.element)) {
-              if(item.event.appear?.callback) {
+            if (isInViewport(item.element)) {
+              if (item.event.appear?.callback) {
                 const callbackParams = {
                   type: 'appear',
                   target: item.element,
                   direction: direction,
                   timestamp: Date.now()
                 }
-                if(item.event.appear?.params.length == 0) {
+                if (item.event.appear?.params.length == 0) {
                   item.event.appear.callback(callbackParams)
                 } else {
                   const paramsArray = []
                   const firstParam = item.event.appear?.params[0]
-                  if(firstParam == 'event') {
+                  if (eventMap.includes(firstParam)) {
                     paramsArray.push(callbackParams)
-                      item.event.appear?.params.slice(1).forEach((key) => {
+                    item.event.appear?.params.slice(1).forEach((key) => {
                       const attrValue = item.element.getAttribute(key)
                       paramsArray.push(attrValue)
                     })
                   } else {
-                      item.event.appear?.params.forEach((key) => {
+                    item.event.appear?.params.forEach((key) => {
                       const attrValue = item.element.getAttribute(key)
                       paramsArray.push(attrValue)
                     })
@@ -892,7 +927,7 @@ let __GlobalToken__ = 0
  * rect.top 元素上边距离页面上边的距离
  * rect.bottom 元素下边距离页面上边的距离
  */
-function isInViewport(element){
+function isInViewport(element) {
   const rect = element.getBoundingClientRect()
   let isInViewport = Math.abs(rect.top) <= 2
   return isInViewport
@@ -916,42 +951,42 @@ function isInViewport(element){
       }
     }
  */
-function initState(){
+function initState() {
   appearOrDisappearMap.forEach((item) => {
-      if(isInViewport(item.element)) {
-        if(item.event.appear) {
-          const callbackParams = {
-            type: 'appear',
-            target: item.element,
-            direction: null,
-            timestamp: Date.now()
-          }
-          if(item.event.appear?.params.length == 0) {
-            item.event.appear.callback(callbackParams)
-          } else {
-            const paramsArray = []
-            const firstParam = item.event.appear?.params[0]
-            if(firstParam == 'event') {
-              paramsArray.push(callbackParams)
-                item.event.appear?.params.slice(1).forEach((key) => {
-                const attrValue = item.element.getAttribute(key)
-                paramsArray.push(attrValue)
-              })
-            } else {
-                item.event.appear?.params.forEach((key) => {
-                const attrValue = item.element.getAttribute(key)
-                paramsArray.push(attrValue)
-              })
-            }
-            item.event.appear.callback(...paramsArray)
-          }
-          item.state = 'appear'
+    if (isInViewport(item.element)) {
+      if (item.event.appear) {
+        const callbackParams = {
+          type: 'appear',
+          target: item.element,
+          direction: null,
+          timestamp: Date.now()
         }
+        if (item.event.appear?.params.length == 0) {
+          item.event.appear.callback(callbackParams)
+        } else {
+          const paramsArray = []
+          const firstParam = item.event.appear?.params[0]
+          if (eventMap.includes(firstParam)) {
+            paramsArray.push(callbackParams)
+            item.event.appear?.params.slice(1).forEach((key) => {
+              const attrValue = item.element.getAttribute(key)
+              paramsArray.push(attrValue)
+            })
+          } else {
+            item.event.appear?.params.forEach((key) => {
+              const attrValue = item.element.getAttribute(key)
+              paramsArray.push(attrValue)
+            })
+          }
+          item.event.appear.callback(...paramsArray)
+        }
+        item.state = 'appear'
       }
+    }
   })
 }
 
-function padingEnabled(elements){
+function padingEnabled(elements) {
   const elementArray = Array.from(elements)
   elementArray.forEach((element) => {
     const height = document.documentElement.clientHeight
@@ -965,10 +1000,10 @@ function padingEnabled(elements){
 
     initState()
 
-    element.addEventListener('touchstart', (e) => {
+    let handleTouchStart = function(e) {
       startTime = Date.now()
       // 该bind相当于手势跟随
-      if(!startHeight.isAnimate) {
+      if (!startHeight.isAnimate) {
         const res = Binding.bind(
           {
             anchor: getEl(element.children[0]),
@@ -982,16 +1017,16 @@ function padingEnabled(elements){
             ],
           },
           function (e) {
-            if(e.state === 'start') {
+            if (e.state === 'start') {
             }
             if (e.state === 'end') {
               endTime = Date.now()
               speed = Math.abs(e.deltaY / (endTime - startTime))
-              if(Math.abs(e.deltaY) > 3) {
-                if(speed > 0.5) {
+              if (Math.abs(e.deltaY) > 3) {
+                if (speed > 0.5) {
                   // 滑动速度大于0.5触发单体cell移动事件
                   BindingXCallback(e.deltaY, height, element, 'speed', startHeight)
-                } else if(Math.abs(e.deltaY) > height/2){
+                } else if (Math.abs(e.deltaY) > height / 2) {
                   BindingXCallback(e.deltaY, height, element, 'distance', startHeight)
                 } else {
                   // 列表回弹
@@ -1003,7 +1038,9 @@ function padingEnabled(elements){
         )
         __GlobalToken__ = res.token
       }
-    })
+    }
+    element.removeEventListener('touchstart', handleTouchStart)
+    element.addEventListener('touchstart', handleTouchStart)
 
   })
 }
@@ -1019,7 +1056,7 @@ function registerViewAppear(elements, touchEventMap) {
         timestamp: Date.now(),
         type: 'viewappear'
       }
-      weexModule.callNative("viewappear",{})  // mount完成后触发
+      weexModule.callNative("viewappear", {})  // mount完成后触发
       window.harmonyViewAppear = function () {
         callback(params)
       }
@@ -1049,38 +1086,42 @@ function registerViewDisAppear(elements, touchEventMap) {
 function registerInputKeyboard(elements, item) {
   const elementArray = Array.from(elements)
   const keyboardHandler = item.handler
+  let handleFocus = function(event) {
+    weexModule.callNative("onKeyboard", {}, keyboardHandler);
+  }
+  let handleBlur = function(event) {
+    weexModule.callNative("offKeyboard", {}, null);
+  }
   elementArray.forEach((element) => {
     if (element.tagName === 'INPUT' && typeof keyboardHandler === 'function') {
-      element.addEventListener('focus', (event) => {
-        weexModule.callNative("onKeyboard", {}, keyboardHandler);
-      })
-      element.addEventListener('blur', (event) => {
-        weexModule.callNative("offKeyboard", {}, null);
-      })
+      element.removeEventListener('focus', handleFocus)
+      element.removeEventListener('blur', handleBlur)
+      element.addEventListener('focus', handleFocus)
+      element.addEventListener('blur', handleBlur)
     }
   })
 }
 
 function showScrollbar(elements, touchEventMap, classNameId) {
-    const handler = touchEventMap.handler
-    if(handler === null || handler === true) {
-      document.styleSheets[0].insertRule(`.${classNameId}::-webkit-scrollbar {display: block;width: 15px;height: 18px;background-color: #aaa;}`, 0)
-      document.styleSheets[0].insertRule(`.${classNameId}::-webkit-scrollbar-thumb {background-color: #000;}`, 0)
-    }
+  const handler = touchEventMap.handler
+  if (handler === null || handler === true) {
+    document.styleSheets[0].insertRule(`.${classNameId}::-webkit-scrollbar {display: block;width: 15px;height: 18px;background-color: #aaa;}`, 0)
+    document.styleSheets[0].insertRule(`.${classNameId}::-webkit-scrollbar-thumb {background-color: #000;}`, 0)
+  }
 }
 
 
 // 当list开启padingEnabled属性时，注册该事件来实现元素显示时触发回调
-function registerAppear(elements, touchEventMap, elementId){
+function registerAppear(elements, touchEventMap, elementId) {
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
   const callback = touchEventMap.handler
-  
-  if(elementArray.length === 1) {
+
+  if (elementArray.length === 1) {
     const element = elementArray[0]
     let hasCurrentElement = false
     appearOrDisappearMap.forEach((item) => {
-      if(item.elementId === elementId) {
+      if (item.elementId === elementId) {
         hasCurrentElement = true
         item.event['appear'] = {
           callback,
@@ -1088,7 +1129,7 @@ function registerAppear(elements, touchEventMap, elementId){
         }
       }
     })
-    if(!hasCurrentElement) {
+    if (!hasCurrentElement) {
       appearOrDisappearMap.push({
         element: element,
         elementId: elementId,
@@ -1106,7 +1147,7 @@ function registerAppear(elements, touchEventMap, elementId){
     elementArray.forEach((element) => {
       let hasCurrentElement = false
       appearOrDisappearMap.forEach((item) => {
-        if(item.element === element) {
+        if (item.element === element) {
           hasCurrentElement = true
           item.event['appear'] = {
             callback,
@@ -1114,7 +1155,7 @@ function registerAppear(elements, touchEventMap, elementId){
           }
         }
       })
-      if(!hasCurrentElement) {
+      if (!hasCurrentElement) {
         appearOrDisappearMap.push({
           element: element,
           elementId: elementId,
@@ -1131,16 +1172,16 @@ function registerAppear(elements, touchEventMap, elementId){
   }
 }
 
-function registerDisappear(elements, touchEventMap, elementId){
+function registerDisappear(elements, touchEventMap, elementId) {
   const elementArray = Array.from(elements)
   const params = touchEventMap.params
   const callback = touchEventMap.handler
 
-  if(elementArray.length === 1) {
+  if (elementArray.length === 1) {
     const element = elementArray[0]
     let hasCurrentElement = false
     appearOrDisappearMap.forEach((item) => {
-      if(item.elementId === elementId) {
+      if (item.elementId === elementId) {
         hasCurrentElement = true
         item.event['disappear'] = {
           callback,
@@ -1148,7 +1189,7 @@ function registerDisappear(elements, touchEventMap, elementId){
         }
       }
     })
-    if(!hasCurrentElement) {
+    if (!hasCurrentElement) {
       appearOrDisappearMap.push({
         element: element,
         elementId: elementId,
@@ -1162,11 +1203,11 @@ function registerDisappear(elements, touchEventMap, elementId){
       })
     }
   } else {
-     // v-for 形式
+    // v-for 形式
     elementArray.forEach((element) => {
       let hasCurrentElement = false
       appearOrDisappearMap.forEach((item) => {
-        if(item.elementId === elementId) {
+        if (item.elementId === elementId) {
           hasCurrentElement = true
           item.event['disappear'] = {
             callback,
@@ -1174,7 +1215,7 @@ function registerDisappear(elements, touchEventMap, elementId){
           }
         }
       })
-      if(!hasCurrentElement) {
+      if (!hasCurrentElement) {
         appearOrDisappearMap.push({
           element: element,
           elementId: elementId,
@@ -1204,13 +1245,13 @@ const gestureMap = new Map([
   ['@verticalpan', verticalpan],
   ['@swipe', swipe],
   ['@stopPropagation', stopPropagation],
-  ['@viewappear',registerViewAppear],
+  ['@viewappear', registerViewAppear],
   ['@viewdisappear', registerViewDisAppear],
   [':paging-enabled', padingEnabled],
   ['@keyboard', registerInputKeyboard],
   ['show-scrollbar', showScrollbar],
   ['@appear', registerAppear],
-  ['@disappear',registerDisappear]
+  ['@disappear', registerDisappear]
 ])
 
 /**
@@ -1228,11 +1269,11 @@ const gestureMap = new Map([
       modifier: ['stop']
     }], "weex-harmony-register-11");
  */
-export function weex_harmongy_registerGesture(eventOrAttrsMap, elementId){
+export function weex_harmongy_registerGesture(eventOrAttrsMap, elementId) {
   const elements = document.getElementsByClassName(elementId)
   eventOrAttrsMap.forEach((item) => {
     const gestureAPI = gestureMap.get(item.name.split('.')[0])
-    if(gestureAPI) {
+    if (gestureAPI) {
       gestureAPI(elements, item, elementId)
     }
   })
@@ -1240,8 +1281,12 @@ export function weex_harmongy_registerGesture(eventOrAttrsMap, elementId){
 
 export function weex_harmony_chunkArray(array, chunkSize) {
   const result = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-      result.push(array.slice(i, i + chunkSize));
+  let chunkInfo = array
+  if (typeof (array) === 'number') {
+    chunkInfo = [...Array(array).keys()].map(i => i + 1)
+  }
+  for (let i = 0; i < chunkInfo.length; i += chunkSize) {
+    result.push(chunkInfo.slice(i, i + chunkSize));
   }
   return result;
 }

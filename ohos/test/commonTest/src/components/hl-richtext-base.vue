@@ -26,7 +26,7 @@ export default {
   computed: {
     hosSameLayerArgs() {
       return {
-        ...this.hosUniqueProps, // 鸿蒙原生组件独有属性
+        ...this.hosUniqueProps, // 原生组件独有属性
         text: this.text, // 多端支持公共属性
       };
     },

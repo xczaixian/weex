@@ -1,42 +1,42 @@
 # 一、框架介绍
 
-当前 Weex 框架，没有鸿蒙 SDK 版本。Weex-Web 替代方案路线与 weex 鸿蒙平台 SDK 路线不同，使用了 **ArkWeb** + **原生ArkTS** 混合方式替代 Weex 1.0 框架，没有对 Weex 框架自身侵入式增加鸿蒙端平台的适配， 而是提供 babel/webpack 插件等脚本，在编译期对 weex 工程进行少许源码改动，注入鸿蒙相关适配代码，最后打包成bundle产物运行在 ArkWeb 容器来达到鸿蒙化 weex 项目的目的。
+Weex-Web方案路线使用 **ArkWeb** + **原生ArkTS** 混合方式运行Weex框架编译产物，没有对Weex框架进行侵入式修改，而是提供Babel/Webpack插件等脚本，在编译期对Weex工程进行少许源码改动，注入相关适配代码，最后打包成bundle产物，运行在ArkWeb容器中。
 
 # 二、架构介绍
 
 Weex-Web 方案的能力封装在 `webScenekitHsp` 中，包括页面管理、跨页面通信、全局监听事件、模版预热、双端通信、自定义拓展组件等。
 
-- 页面管理： 核心服务，实现全局路由和web容器资源统一管理，支撑weex鸿蒙化页面调度场景；
-- 跨页面通信： 提供 `BroadcastChannel` 机制允许页面之间进行通信；
-- 全局监听事件： 提供 `GlobalEvent` 机制监听全局事件；
-- 模板预热： 对高频页面提前进行预渲染；
-- 双端通信： Web 环境与原生环境交互，提供注册 API 通道，允许 Web 环境通过通道访问原生侧；
-- 自定义拓展组件： 使用Web组件的同层渲染能力，允许用户拓展自定义组件。
+- 页面管理：核心服务，实现全局路由和Web容器资源统一管理，支撑页面调度场景；
+- 跨页面通信：提供 `BroadcastChannel` 机制允许页面之间进行通信；
+- 全局监听事件：提供 `GlobalEvent` 机制监听全局事件；
+- 模板预热：对高频页面提前进行预渲染；
+- 双端通信：Web环境与原生环境交互，提供注册API通道，允许Web环境通过通道访问原生侧；
+- 自定义拓展组件：使用Web组件的同层渲染能力，允许用户拓展自定义组件。
 
 # 三、环境搭建
 
-## 3.1 weex 工程编译打包
+## 3.1 Weex工程编译打包
 
-### 3.1.1 安装 nodejs 版本
+### 3.1.1 安装Node.js版本
 
-注意：建议14版本，实际使用请根据工程环境而定
+注意：建议14版本，实际使用请根据工程环境而定。
 
 ### 3.1.2 安装Weex CLI
 
-通过官网[设置开发环境 | WEEX (weexapp.com)](https://weexapp.com/zh/guide/develop/setup-develop-environment.html#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96)安装脚手架工具并初始化项目。
-注意：使用weex -v 查看版本号为：Weex CLI version 2.0.0-beta.32
+通过官网[设置开发环境 | Weex (weexapp.com)](https://weexapp.com/zh/guide/develop/setup-develop-environment.html#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96)安装脚手架工具并初始化项目。
+注意：使用weex -v 查看版本号为： `Weex CLI version 2.0.0-beta.32` 。
 
-### 3.1.2 Weex项目鸿蒙化打包配置
+### 3.1.2 Weex项目打包配置
 
-#### 3.1.2.1 添加鸿蒙化打包命令及项目依赖
+#### 3.1.2.1 添加打包命令及项目依赖
 
-在package.json中添加鸿蒙编译打包命令
+在package.json中添加编译打包命令：
 
 ```shell
 "build:harmony": "cross-env NODE_ENV=harmony apiEnv=prod ISHARMONY=true webpack --env.NODE_ENV=harmony",
 ```
 
-由于新建weex项目中依赖版本过老，可直接替换以下版本依赖，其中`@ohos/weex-harmony`依赖包是由ohos/weex-openharmony工程中执行npm pack命令生成本地tgz包。
+由于新建Weex项目中依赖版本过老，可直接替换以下版本依赖，其中`@ohos/weex-harmony`依赖包是由ohos/weex-openharmony工程中执行npm pack命令生成本地tgz包。
 
 ```json
 "dependencies": {
@@ -126,10 +126,10 @@ Weex-Web 方案的能力封装在 `webScenekitHsp` 中，包括页面管理、�
   }
 ```
 
-#### 3.1.2.2 新增鸿蒙环境打包配置
+#### 3.1.2.2 新增打包配置
 
-在ohos/example目录下的weex-example样例工程中configs目录下获取`webpack.harmony.conf.js`文件并添加到本地weex项目中。
-在`webpack.harmony.conf.js`鸿蒙环境打包配置中打包所需的文件结构目录如下所示：
+在ohos/example目录下的weex-example样例工程中configs目录下获取`webpack.harmony.conf.js`文件并添加到本地Weex项目中。
+在`webpack.harmony.conf.js`打包配置中打包所需的文件结构目录如下所示：
 
 ```markup
 └── weex-example               # 所有项目的集合
@@ -143,11 +143,11 @@ Weex-Web 方案的能力封装在 `webScenekitHsp` 中，包括页面管理、�
 
 #### 3.1.2.3 修改替换公共打包配置并引入编译打包时执行loader插件
 
-在ohos/example目录下的weex-example样例工程中configs目录下获取`webpack.dev.conf.js` 、`webpack.common.conf.js`、`qrcode-w-plugin.js`、`config.js`、`utils.js`、`transform-loader.js`文件并添加并替换到本地weex项目中。
+在ohos/example目录下的weex-example样例工程中configs目录下获取`webpack.dev.conf.js` 、`webpack.common.conf.js`、`qrcode-w-plugin.js`、`config.js`、`utils.js`、`transform-loader.js`文件并添加并替换到本地Weex项目中。
 
 #### 3.1.2.4 修改webpack打包配置文件
 
-在项目根目录下的webpack.config.js打包配置文件中增加鸿蒙环境下引用的打包插件
+在项目根目录下的webpack.config.js打包配置文件中增加打包插件：
 
 ```javascript
 case 'harmony': 
@@ -171,24 +171,17 @@ case 'harmony':
          }
        ]
      ],
-     "plugins": [["@babel/plugin-transform-runtime"], [
-       "component",
-       {
-         "libraryName": "@umetrip/ume-weex-ui",
-         "libDir": "packages",
-         "style": false
-       }
-     ]]
+     "plugins": [["@babel/plugin-transform-runtime"]]
    }
    ```
-2. 在项目根目录下创建`babel.config.js`文件，并配置`weexTransform.js`转换插件
+2. 在项目根目录下创建`babel.config.js`文件，并配置`weexTransform.js`转换插件：
    
    ```javascript
    module.exports = {
      plugins: ['./configs/weexTransform.js']  
    }
    ```
-3. 在ohos/example目录下的weex-example样例工程中configs目录下获取`weexTransform.js`文件并添加到本地weex项目中。
+3. 在ohos/example目录下的weex-example样例工程中configs目录下获取`weexTransform.js`文件并添加到本地Weex项目中。
 #### 3.1.2.6 修改src/entry.js入口文件并初始化
 ```javascript
 import Vue from 'vue';
@@ -213,17 +206,17 @@ npm install
 npm run build:harmony
 ```
 
-在工程目录下会生成编译产物frameworkTest_harmony_web.zip，解压后的frameworkTest_web文件夹为后续需要使用的web资源
+在工程目录下会生成编译产物frameworkTest_harmony_web.zip，解压后的frameworkTest_web文件夹为后续需要使用的Web资源。
 
 ![image](./assets/dede7776-303e-4c3f-a6a4-a366e6224120.png)
 
-## 3.2 webScenekitHsp 集成
+## 3.2 webScenekitHsp集成
 
-1）将ohos目录下的web_scenekit_hsp文件夹复制到需要集成的工程目录下，如下所示
+1）将ohos目录下的web_scenekit_hsp文件夹复制到需要集成的工程目录下，如下所示：
 
 ![image](./assets/Snipaste_2024-10-25_11-04-47.png)
 
-2）在工程根目录下的build-profile.json5中配置module字段，如下所示
+2）在工程根目录下的build-profile.json5中配置module字段，如下所示：
 
 ```json
 "modules": [
@@ -254,7 +247,7 @@ npm run build:harmony
 ]
 ```
 
-3）在entry模块的oh-package.json5中dependencies引入webSencekitHsp模块
+3）在entry模块的oh-package.json5中dependencies引入webSencekitHsp模块：
 
 ```json
 "dependencies": {
@@ -264,7 +257,7 @@ npm run build:harmony
 
 4）webSencekitHsp模块的初始化
 
-a、在entry模块下ets目录中创建GlobalThis.ets文件，然后在EntryAbility.ets(路径:src/main/ets/entryability/EntryAbility.ets)中的onCreate中保存context到GlobalThis中，供后续路由管理服务使用
+a、在entry模块下ets目录中创建GlobalThis.ets文件，然后在EntryAbility.ets(路径:src/main/ets/entryability/EntryAbility.ets)中的onCreate中保存context到GlobalThis中，供后续路由管理服务使用。
 
 ```javascript
 // GlobalThis .ets
@@ -297,7 +290,7 @@ onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
   }
 ```
 
-b、在EntryAbility.ets中的onWindowStageCreate中对ExtWebController初始化，同时将UIContext保存到AppStorage中
+b、在EntryAbility.ets中的onWindowStageCreate中对ExtWebController初始化，同时将UIContext保存到AppStorage中。
 
 ```javascript
 import { ExtWebController } from 'WebSceneKitHsp';
@@ -309,18 +302,18 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 
     windowStage.loadContent('pages/Index', (err, data) => {
       // 支持业务侧动态配置 将业务模块路径传入init 页面配置文件在每个业务模块根目录
-      // 第一个参数为业务模块目录名，和rawfile下保持一致，最后一个参数是初始化web容器数量
+      // 第一个参数为业务模块目录名，和rawfile下保持一致，最后一个参数是初始化Web容器数量
       ExtWebController.init(['frameworkTest_web'], windowStage.getMainWindowSync().getUIContext(), this.context, 10);
       AppStorage.setOrCreate("uiContext", windowStage.getMainWindowSync().getUIContext());
     });
   }
 ```
 
-5）将weex工程中编译生成的frameworkTest_web放到鸿蒙工程的entry/src/main/resources/rawfile下
+5）将Weex工程中编译生成的frameworkTest_web放到工程的entry/src/main/resources/rawfile下。
 
-6）ExtWeb组件加载web页面
+6）ExtWeb组件加载Web页面
 
-对外提供的扩展web组件。可在IDE工程page页面的容器控件中加载ExtWeb组件，入参的url为需要加载的web页面的地址。
+对外提供的扩展Web组件。可在IDE工程page页面的容器控件中加载ExtWeb组件，入参的url为需要加载的Web页面的地址。
 
 ```ts
 import { ExtWeb } from 'WebSceneKitHsp'
@@ -336,11 +329,11 @@ build() {
 }
 ```
 
-## 3.3 鸿蒙工程编译运行
+## 3.3 工程编译运行
 
-注：DevEco Studio、SDK和 ROM 镜像需要使用5.0的版本
+注：DevEco Studio、SDK和ROM镜像需要使用5.0的版本。
 
-1. 将weex工程编译出的web资源拷贝到壳工程的entry/src/main/resources/rawfile目录下
+1. 将Weex工程编译出的Web资源拷贝到壳工程的entry/src/main/resources/rawfile目录下。
 2. 项目签名
    
    ![image](./assets/edb18e95-e129-4e8c-b239-a9ea0a253075.png)
@@ -354,13 +347,13 @@ build() {
 
 ### 4.1.1 功能简介
 
-WebSceneKitHsp为weex框架提供了增强web功能，包括页面管理、跨页面通信、全局监听事件、模版预热、web侧api调用原生api、高性能组件、自定义拓展组件等能力。
+WebSceneKitHsp为Weex框架提供了增强web功能，包括页面管理、跨页面通信、全局监听事件、模版预热、web侧api调用原生api、高性能组件、自定义拓展组件等能力。
 
 ### 4.1.2 接口说明
 
 #### 4.1.2.1 **ExtWeb组件**
 
-扩展web组件，内部封装了页面管理服务、跨页通信、web实例预热、模版预热等功能。具体参数说明：
+扩展Web组件，内部封装了页面管理服务、跨页通信、Web实例预热、模版预热等功能。具体参数说明：
 
 | 名称 | 类型   | 描述      | 是否必选 |
 | ---- | ------ | --------- | -------- |
@@ -368,22 +361,22 @@ WebSceneKitHsp为weex框架提供了增强web功能，包括页面管理、跨�
 
 #### 4.1.2.2 **ExtWebController**
 
-对外提供的扩展web组件控制类, 具体接口有init、registerCustomFun以及triggerEvent。
+对外提供的扩展Web组件控制类, 具体接口有init、registerCustomFun以及triggerEvent。
 
 ##### 4.1.2.2.1 init接口
 
-动态解析配置文件并初始化web资源实例池。具体参数说明：
+动态解析配置文件并初始化Web资源实例池。具体参数说明：
 
 | 名称      | 类型                    | 描述                      | 是否必选 |
 | --------- | ----------------------- | ------------------------- | -------- |
 | pathArray | Array[string]           | 业务模块根目录            | Y        |
 | uiContext | UIContext               | UI上下文实例UIContext对象 | Y        |
 | context   | common.UIAbilityContext | 上下文context             | Y        |
-| poolSize  | number                  | 初始化web实例资源池数量   | N        |
+| poolSize  | number                  | 初始化Web实例资源池数量   | N        |
 
 ##### 4.1.2.2.2 registerCustomFun接口
 
-注入自定义ArkTs高阶api到WebSceneKit，在weex端即可直接调用。具体参数说明：
+注入自定义ArkTs高阶api到WebSceneKit，在Weex端即可直接调用。具体参数说明：
 
 | 名称    | 类型     | 描述           | 是否必选 |
 | ------- | -------- | -------------- | -------- |
@@ -392,7 +385,7 @@ WebSceneKitHsp为weex框架提供了增强web功能，包括页面管理、跨�
 
 ##### 4.1.2.2.3 triggerEvent接口
 
-为Weex的GlobalEvent提供，可以在weex端自定义事件，在ArkTs端通过triggerEvent接口触发事件。具体参数说明：
+为Weex的GlobalEvent提供，可以在Weex端自定义事件，在ArkTs端通过triggerEvent接口触发事件。具体参数说明：
 
 | 名称      | 类型           | 描述               | 是否必选 |
 | --------- | -------------- | ------------------ | -------- |
@@ -421,25 +414,25 @@ WebSceneKitHsp为weex框架提供了增强web功能，包括页面管理、跨�
 
 ![image](./assets/54fbe58e-12c3-4b1d-8153-2a08e3357f0c.png)
 
-页面加载核心流程：初始化web池 -> 页面加载/跳转 -> 查询路由配置 -> 获取web实例 ->获取对应pageStack， push页面栈 -> NodeContainer上下树管理 -> 路由到目标html
+页面加载核心流程：初始化web池 -> 页面加载/跳转 -> 查询路由配置 -> 获取Web实例 ->获取对应pageStack， push页面栈 -> NodeContainer上下树管理 -> 路由到目标html
 
 ### 4.2.1 方案
 
-weex页面可分为以下4种，1、高频访问页面 2、不需要跨页面通信场景的页面 3、有跨页面通讯的页面 4、web和原生混合的页面，页面管理服务对不同的页面进行管理并提供针对性的加载策略。
+Weex页面可分为以下4种，1、高频访问页面，2、不需要跨页面通信场景的页面，3、有跨页面通讯的页面，4、web和原生混合的页面，页面管理服务对不同的页面进行管理并提供针对性的加载策略。
 
-1）针对高频访问的web页面，使用模版预热来提升页面加载速度，模版预热见3.3；
+1）针对高频访问的Web页面，使用模版预热来提升页面加载速度，模版预热见3.3；
 
-2）针对不需要跨页面通信场景的web页面，使用web容器共享来减少web实例的创建；
+2）针对不需要跨页面通信场景的Web页面，使用Web容器共享来减少Web实例的创建；
 
-3）针对需要跨页面通信场景的web页面，使用多web实例进行加载，即一个页面对应一个web实例，当页面跳转后，web实例依然存在；
+3）针对需要跨页面通信场景的Web页面，使用多Web实例进行加载，即一个页面对应一个Web实例，当页面跳转后，Web实例依然存在；
 
-4）针对h5和原生的混合页面，如果混合页面跳转的目标页面为混合页面则不触发原生页面的跳转；
+4）针对Web和原生的混合页面，如果混合页面跳转的目标页面为混合页面则不触发原生页面的跳转；
 
 使用以上策略的页面管理服务在保证性能最优的情况下页面跳转和回退符合正常逻辑。
 
 ### 4.2.2 ExtWeb组件的初始化
 
-调用ExtWebController的init接口，初始化ExtWeb组件。init过程会动态解析每个业务模块下的配置文件、初始化web实例资源池， ExtWeb的初始化需要在使用ExtWeb之前。建议在entryAbility的onWindowStageCreate中调用ExtWebController的init方法，参数poolSize最大值为10，大于10默认poolSize等于10。
+调用ExtWebController的init接口，初始化ExtWeb组件。init过程会动态解析每个业务模块下的配置文件、初始化Web实例资源池， ExtWeb的初始化需要在使用ExtWeb之前。建议在entryAbility的onWindowStageCreate中调用ExtWebController的init方法，参数poolSize最大值为10，大于10默认poolSize等于10。
 
 ```ts
 onWindowStageCreate(windowStage: window.WindowStage) {
@@ -461,7 +454,7 @@ onWindowStageCreate(windowStage: window.WindowStage) {
   }
 ```
 
-如果跳转页面过多，web资源池中的空余web耗尽时，会在webSceneKitHsp中动态创建新的web资源。
+如果跳转页面过多，Web资源池中的空余web耗尽时，会在webSceneKitHsp中动态创建新的Web资源。
 
 ```ts
 public getWebInstanceId(reuse: boolean, url?: string): number {
@@ -477,7 +470,7 @@ public getWebInstanceId(reuse: boolean, url?: string): number {
 
 ### 4.2.3 ExtWeb组件的使用
 
-对外提供的扩展web组件。可在page页面的容器控件中加载ExtWeb组件，入参的url为首页的url。
+对外提供的扩展Web组件。可在page页面的容器控件中加载ExtWeb组件，入参的url为首页的url。
 
 ```ts
 build() {
@@ -507,8 +500,8 @@ build() {
 type类型说明：
 
 type：1 模板预热类型，适用于高频访问且无白屏场景的页面，快速加载页面，性能持平原生跳转。
-type：2 多页面多web实例，适用于有跨页面通讯场景的页面，支持broadcastChannel和globalEvent；
-type：3 多页面单web实例，适用于不需要跨页面通讯的页面，默认类型。
+type：2 多页面多Web实例，适用于有跨页面通讯场景的页面，支持broadcastChannel和globalEvent；
+type：3 多页面单Web实例，适用于不需要跨页面通讯的页面，默认类型。
 
 type：4 混合页面，有两种情况： 1）加载的web和原生组件在同一个Page页；2）原生page使用多个ExtWeb组件。
 
@@ -516,7 +509,7 @@ type：4 混合页面，有两种情况： 1）加载的web和原生组件在同
 
 示例代码：
 
-项目weexProject里的resource://rawfile/frameworkTest_web/pages/index/entry.html， 该url地址不需要支持跨页通信，所以配置为 type：3
+项目weexProject里的resource://rawfile/frameworkTest_web/pages/index/entry.html， 该url地址不需要支持跨页通信，所以配置为type：3
 
 ```json
 ...
@@ -531,7 +524,7 @@ type：4 混合页面，有两种情况： 1）加载的web和原生组件在同
 ...
 ```
 
-项目weexProject里的resource://rawfile/frameworkTest_web/pages/mapTest1/entry.html， 该url地址使用跨页通讯接口（broadcastChannel、globalEvent），所以配置为 type：2
+项目weexProject里的resource://rawfile/frameworkTest_web/pages/mapTest1/entry.html， 该url地址使用跨页通讯接口（broadcastChannel、globalEvent），所以配置为type：2
 
 ```json
 "projectName": "weexProject",
@@ -711,7 +704,7 @@ public preloadTemplate(routerUrl: string) {
 }
 ```
 
-addProject方法一共做了两件事：1. 遍历需要提前预热的业务模块下的所有url（未带参数），并将url的状态值设置成'initial'；2. 为预热url（未带参数）配备一个web实例，执行controller的loadurl。
+addProject方法一共做了两件事：1. 遍历需要提前预热的业务模块下的所有url（未带参数），并将url的状态值设置成'initial'；2. 为预热url（未带参数）配备一个Web实例，执行controller的loadurl。
 
 ```ts
 public async addProject(addProjects: Array<string>) {
@@ -762,7 +755,7 @@ public refreshStatus(url: string) {
 
 ### 4.3.5 局部刷新
 
-预热成功后，在页面跳转时将url（带参数）的拼接参数截取出来执行history.pushState控制业务页面局部刷新，weex工程需要封装pushState监听事件。以下实现已封装在webSencekitHsp中。
+预热成功后，在页面跳转时将url（带参数）的拼接参数截取出来执行history.pushState控制业务页面局部刷新，Weex工程需要封装pushState监听事件。以下实现已封装在webSencekitHsp中。
 
 ![image](./assets/b6302f87-2db1-470b-ac09-0f2da0e9374a.png)
 
@@ -781,7 +774,7 @@ if (WebManager.getInstance().isPreloadFinish(routerUrl)) {
 
 ### 4.4.1 编译打包
 
-weex 模块鸿蒙化是在编译打包过程中对module的导入进行语法树分析，将需要桥接到原生的module转为引用weex-harmony模块，在weex-harmony中通过jsBridge桥接到原生，在鸿蒙原生进行实现。在此过程中需要用户做4步操作 1、添加自定义babel插件 2、babel插件的实现（可直接复用模版） 3、在package.json中引入weex-harmony插件 4、在打包命令中添加ISHARMONY=true
+Weex模块编译是在编译打包过程中对module的导入进行语法树分析，将需要桥接到原生的module转为引用weex-harmony模块，在weex-harmony中通过jsBridge桥接到原生，在原生端进行实现。在此过程中需要用户做4步操作：1、添加自定义babel插件，2、babel插件的实现（可直接复用模版），3、在package.json中引入weex-harmony插件，4、在打包命令中添加ISHARMONY=true
 
 ![image](./assets/a62d1304-0d15-427f-af2f-179dcf7373a6.png)
 
@@ -797,7 +790,7 @@ module.exports = {
 
 #### 4.4.1.2 自定义babel插件实现
 
-自定义babel插件weexTransform.js文件内容如下，文件路径可自定义，但需要和babel.config.js中配置的路径保持一致
+自定义babel插件weexTransform.js文件内容如下，文件路径可自定义，但需要和babel.config.js中配置的路径保持一致。
 
 ```javascript
 const weexExtModules = [
@@ -892,7 +885,7 @@ module.exports = function({ types: t }) {
 
 #### 4.4.1.3 添加适配层依赖包@ohos/weex-harmony
 
-weex-harmony插件的作用是适配weex侧的api并桥接到原生调用鸿蒙原生侧的高阶Api，package.json中路径需要修改为本地tgz包文件路径，tgz包生成方式见[3.1.2.1](####3.1.2.1添加鸿蒙化打包命令及项目依赖)。
+weex-harmony插件的作用是适配Weex侧的api并桥接到原生调用原生侧的高阶Api，package.json中路径需要修改为本地tgz包文件路径，tgz包生成方式见[3.1.2.1](####3.1.2.1添加打包命令及项目依赖)。
 
 ![image](./assets/cb897828-c91b-4c90-ba93-edd725633983.png)
 
@@ -900,9 +893,9 @@ weex-harmony插件的作用是适配weex侧的api并桥接到原生调用鸿蒙�
 
 ```javascript
 let weexModule = {
-  name: "weex扩展API",
+  name: "Weex扩展API",
   // 默认走同步
-  // isAsync: 是否异步方式调用 native api
+  // isAsync: 是否异步方式调用native api
   callNative: function (name, paramObj, callback, isAsync = false) {
     // @ts-ignore
     native.run(name, paramObj, callback, isAsync);
@@ -910,7 +903,7 @@ let weexModule = {
 }
 
 let clipboard = {
-  name: "weex剪贴板事件",
+  name: "Weex剪贴板事件",
   getString: function (callback) {
     weexModule.callNative('getString', "", callback);
   },
@@ -921,14 +914,14 @@ let clipboard = {
 }
 
 let deviceInfo = {
-  name: "weex获取全屏高度",
+  name: "Weex获取全屏高度",
   enableFullScreenHeight: function (callback) {
     weexModule.callNative('enableFullScreenHeight', null, callback);
   }
 }
 
 let navigator = {
-  name: "weex导航事件",
+  name: "Weex导航事件",
   pop: function (options, callback) {
     weexModule.callNative('navigatorPop', options, callback);
   },
@@ -941,7 +934,7 @@ let navigator = {
 }
 
 let globalEvent = {
-  name: "weex监听全局事件",
+  name: "Weex监听全局事件",
   addEventListener: function (eventName, callback) {
     if (callback === undefined) {
       console.error("callback is undefined.");
@@ -1048,7 +1041,7 @@ const websocket = {
 
 
 let picker = {
-  name: "weex 选择器",
+  name: "Weex选择器",
   pick: function (options, callback) {
     weexModule.callNative('pick', { 'options': options }, callback);
   },
@@ -1111,7 +1104,7 @@ const weexExtModules = [
 
 ```javascript
 let weexModule = {
-  name: "weex扩展API",
+  name: "Weex扩展API",
   callNative: function (name, paramObj, callback) {
     // @ts-ignore
     native.run(name, paramObj, callback);
@@ -1125,11 +1118,11 @@ let weexModule = {
 
 ## 4.5 高性能组件
 
-部分对性能有要求的组件需要原生组件的支持，以下介绍通过同层渲染将原生组件渲染到web页面上，提高页面渲染性能。
+部分对性能有要求的组件需要原生组件的支持，以下介绍通过同层渲染将原生组件渲染到Web页面上，提高页面渲染性能。
 
 ### 4.5.1 同层渲染简介
 
-weex在android和ios侧提供Component拓展能力，不同于weex在android和ios侧映射到原生，weex鸿蒙化走web路线，因此，提供一种基于同层渲染的拓展组件能力，在web中使用embed标签，在原生侧解析并将对应的原生组件渲染在embed标签处
+Weex在Android和iOS侧提供Component拓展能力，不同于Weex在Android和iOS侧映射到原生渲染，Weex-harmony使用Web路线，因此，提供一种基于同层渲染的拓展组件能力，在Web中使用embed标签，在原生侧解析并将对应的原生组件渲染在embed标签处。
 
 ![image](./assets/576798f5-e7e6-42f4-a936-9582505f0acd.png)
 
@@ -1276,7 +1269,7 @@ transferPropsAndListeners() {
 },
 ```
 
-另外，用户也可以给自定义组件增加实例方法，比如自定义的Lottie组件中，定义了 play等方法，代码示例如下
+另外，用户也可以给自定义组件增加实例方法，比如自定义的Lottie组件中，定义了play等方法，代码示例如下：
 
 ```javascript
 <template>
@@ -1320,11 +1313,11 @@ export default {
 
 ```
 
-示例代码使用 this.$refs.mylottie.play 调用 Lottie 组件中的 play 方法，该方法使用weexModule.callNative("lottieHandle", ...) 访问原生侧的 lottieHandle API。
+示例代码使用 `this.$refs.mylottie.play` 调用Lottie组件中的play方法，该方法使用 `weexModule.callNative("lottieHandle", ...)` 访问原生侧的 `lottieHandle` API。
 
 ### 4.5.3 添加自定义loader
 
-自定义拓展组件在android和ios都是以注册的方式，鸿蒙化时自定义拓展组件在web侧进行实现，在编译成鸿蒙产物时，需要引用到所在的文件，因此提供一个自定义loader在打包成鸿蒙产物时进行自动引用
+自定义拓展组件在Android和iOS都是以注册的方式，Weex-harmony自定义拓展组件在web侧进行实现，在编译成产物时，需要引用到所在的文件，因此提供一个自定义loader在打包成产物时进行自动引用
 
 1）自定义loader transform-loader.js实现
 
@@ -1751,7 +1744,7 @@ export class VideoParams {
 }
 ```
 
-另外，针对Web侧定义的实例方法，比如Lottie的play方法，需要在原生侧定义 lottieHandle API 并注册到通信通道。
+另外，针对Web侧定义的实例方法，比如Lottie的play方法，需要在原生侧定义 `lottieHandle` API并注册到通信通道。
 
 ```javascript
 // LottieAPI.ets
@@ -1808,23 +1801,23 @@ export default class EntryAbility extends UIAbility {
 
 #### 插件背景
 
-因为weex鸿蒙化走的是web路线，并坚持尽量不改动weex框架代码。但是这种情况下会暴露一些问题，例如weex中有些组件其属性或事件在h5端不支持，因此为了让客户业务能够使用这些属性及事件，因此我们提供了gesture-loader.js和registerGesture.js配合使用来支持的组件属性进行解析并自己实现一套在h5上运行的属性解决方案。该插件可以从ohos/example/weex-example/configs下获取。gesture-loader.js的主要能力是对vue模块解析，感知元素当中绑定了哪些指定事件和属性，将该事件和属性生成对应的数据结构交给registerGesture.js文件去具体实现，本质上gesture-loader.js只解析不做具体功能实现,registerGesture.js只做方法属性的实现封装。
+因为Weex-harmony走的是web路线，并坚持尽量不改动Weex框架代码。但是这种情况下会暴露一些问题，例如Weex中有些组件其属性或事件在Web端不支持，因此为了让客户业务能够使用这些属性及事件，因此我们提供了gesture-loader.js和registerGesture.js配合使用来支持的组件属性进行解析并自己实现一套在Web上运行的属性解决方案。该插件可以从ohos/example/weex-example/configs下获取。gesture-loader.js的主要能力是对vue模块解析，感知元素当中绑定了哪些指定事件和属性，将该事件和属性生成对应的数据结构交给registerGesture.js文件去具体实现，本质上gesture-loader.js只解析不做具体功能实现,registerGesture.js只做方法属性的实现封装。
 
 ### gesture-loader.js
 
 #### 主要功能
 
-目前gesture-loader.js提供的功能有：**通用事件解析、手势事件解析、weex组件属性及方法解析、vue三段式结构解析**。
+目前gesture-loader.js提供的功能有：**通用事件解析、手势事件解析、Weex组件属性及方法解析、vue三段式结构解析**。
 
 1、**通用事件解析**
 
-目前gesture-loader支持这些weex通用事件longpress、appear、disappear、viewAppear、viewDisappear 的解析
+目前gesture-loader支持这些Weex通用事件longpress、appear、disappear、viewAppear、viewDisappear 的解析
 
 2、**手势事件解析**
 
-目前gesture-loader支持对 touchstart、touchmove、touchend、stopPropagation、panstart、panstart、panend、horizontalpan、verticalpan、swipe、LongPress 这10个手势事件的解析
+目前gesture-loader支持对touchstart、touchmove、touchend、stopPropagation、panstart、panstart、panend、horizontalpan、verticalpan、swipe、LongPress 这10个手势事件的解析
 
-3、**weex组件属性及方法解析**
+3、**Weex组件属性及方法解析**
 
 1）解析组件方法需要在EVENT_MAP数组中添加需要解析的方法名
 
@@ -1861,7 +1854,7 @@ const ATTRS_MAP = [
 ]
 ```
 
-但是对于一些特殊的属性解析，需要单独实现而不是放到map数组中，例如paging-enabled属性。该属性是list组件中的属性，因为weex并没有在h5上实现这个属性，因此我们需要对该属性进行适配实现。该属性的作用是让List组件呈现item的形式不再是滑动，而是类似于抖音视频那种，单个cell整体上下移动，该移动是一个动画。针对于这种复杂的属性，在解析的时候需对list组件添加一定的style样式，因此该属性的解析和html结构更改是一起进行的，因此无法将paging-enabled的解析放到ATTRS_MAP数组中，因为该属性的解析涉及到对应组件结构的更改。
+但是对于一些特殊的属性解析，需要单独实现而不是放到map数组中，例如paging-enabled属性。该属性是list组件中的属性，因为Weex并没有在Web上实现这个属性，因此我们需要对该属性进行适配实现。该属性的作用是让List组件呈现item的形式不再是滑动，而是类似于抖音视频那种，单个cell整体上下移动，该移动是一个动画。针对于这种复杂的属性，在解析的时候需对list组件添加一定的style样式，因此该属性的解析和html结构更改是一起进行的，因此无法将paging-enabled的解析放到ATTRS_MAP数组中，因为该属性的解析涉及到对应组件结构的更改。
 
 因此如果一个属性的解析需要对结构进行更改，该属性最好单独解析而不是放到ATTRS_MAP数组中。
 
@@ -1897,7 +1890,7 @@ function resolveVueSFC(source){
   const moduleResoveRet = compiler.parseComponent(source)
   const { template, script, styles } = moduleResoveRet
 
-  // 解析 template 和 script代码
+  // 解析template和script代码
   resolveTemplate(template)
 
   // 只有当模块中存在绑定指定的事件和属性时，才会解析scriptAst
@@ -1913,7 +1906,7 @@ function resolveVueSFC(source){
 }
 ```
 
-该函数主要作用是通过导入的 const compiler = require('vue-template-compiler') compiler函数将vue代码解析为三个部分：template、script、styles部分，其中因为在vue中style可以有多个，因此其是一个数组。
+该函数主要作用是通过导入的 `const compiler = require('vue-template-compiler')`， compiler函数将vue代码解析为三个部分：template、script、styles部分，其中因为在vue中style可以有多个，因此其是一个数组。
 
 resolveTemplate(template) 函数的主要作用是解析vue中的template结构
 
@@ -1929,7 +1922,7 @@ function resolveTemplate(template){
   // 遍历元素，记录驼峰写法的组件名
   isCamelCase(templateContent)
 
-  // 遍历 template 元素节点，记录绑定事件或属性信息
+  // 遍历template元素节点，记录绑定事件或属性信息
   traverseTemplateNode(templateAst)
 
   // 解析paging-enable属性
@@ -1947,7 +1940,7 @@ function resolveTemplate(template){
 
 该函数的作用是用于解析template中的html结构，通过template.content获取到对应的template字符串代码，然后调用himalaya的parse函数解析，该函数会返回一个ast，该ast本质上是一个树形结构的对象。在解析template的过程中，首先会调用isCamelCase函数，该函数的作用是遍历元素，记录template中有哪些组件是驼峰写法。因为himalaya解析html之后在生产对应的字符串代码时会将驼峰写法统一转为小写，这就导致原先是`<UmeVideo>`组件被编译为`<umevideo>`。因此需要先记录哪些组件使用了驼峰写法。如果存在驼峰写法，在后面会通过resetComponentName函数将其还原。
 
-当记录驼峰组件后会通过traverseTemplateNode函数遍历 template 元素节点，记录绑定事件或属性信息。如果template有我们指定解析的属性或方法，则会将其收集到elementMap数组中。接着调用了parsePagingEnable()函数，因为该属性比复杂并且涉及到了html结构的修改，因此需要单独处理。
+当记录驼峰组件后会通过traverseTemplateNode函数遍历template元素节点，记录绑定事件或属性信息。如果template有我们指定解析的属性或方法，则会将其收集到elementMap数组中。接着调用了parsePagingEnable()函数，因为该属性比复杂并且涉及到了html结构的修改，因此需要单独处理。
 
 函数最后有一个判断分支，如果在template中有需要解析或者重新实现的属性/方法，则将修改后的html结构通过stringify函数重现转为字符串代码。以上是对vue代码的`<template>`标签中代码的解析和修改过程。当template解析完之后会解析vue代码的script部分。但是在解析之前做了一个判断，只有当模块中存在绑定指定的事件和属性时，才会解析scriptAst。这样做可以减少对js代码进行没必要的babel解析。若template中有需要解析的属性或方法，则调用该函数解析js
 
@@ -2616,9 +2609,9 @@ function checkPagingEnabled(templateAst){
 }
 ```
 
-主要原理仍是遍历每个元素节点并判断元素是否绑定paging-enabled属性。因为在h5端,weex并没有为其实现类似于抖音视频上下滑动的功能，因此手动实现时需要对list组件做处理，为了避免List的默认滑动行为需要为其设置样式来禁掉原来的滑动行为。因为我们实现该功能的一个重要环节是希望list的滚动是由插件控制，例如用户向上滑动list，则插件会监听到用户滑动的距离而做高度跟随，当用户松手时通过使用bindingX实现向上滑动动效，整个过程都是插件控制。
+主要原理仍是遍历每个元素节点并判断元素是否绑定paging-enabled属性。因为在Web端，Weex并没有为其实现类似于抖音视频上下滑动的功能，因此手动实现时需要对list组件做处理，为了避免List的默认滑动行为需要为其设置样式来禁掉原来的滑动行为。因为我们实现该功能的一个重要环节是希望list的滚动是由插件控制，例如用户向上滑动list，则插件会监听到用户滑动的距离而做高度跟随，当用户松手时通过使用bindingX实现向上滑动动效，整个过程都是插件控制。
 
-当检测到绑定paging-enabled属性之后将该属性push到eventOrAttrsMap数组中并为元素设置classId。当检测完该属性之后会为list组件添加父元素，为List添加父元素的原因是要让list全屏显示。这里曾尝试过直接让list全屏，但是因为weex会将list组件最后编译为<main>标签，就会导致该标签的高度是根据内部子元素高度确定的并且绑定的动态style会失效，因此采用了添加父元素div标签的方式来控制main标签高度，让其高度设置为全屏。
+当检测到绑定paging-enabled属性之后将该属性push到eventOrAttrsMap数组中并为元素设置classId。当检测完该属性之后会为list组件添加父元素，为List添加父元素的原因是要让list全屏显示。这里曾尝试过直接让list全屏，但是因为Weex会将list组件最后编译为<main>标签，就会导致该标签的高度是根据内部子元素高度确定的并且绑定的动态style会失效，因此采用了添加父元素div标签的方式来控制main标签高度，让其高度设置为全屏。
 
 ```javascript
 /**
@@ -2643,7 +2636,7 @@ function parsePagingEnabledNode(node){
       }
     })
 
-    // 如果设置 pagingEnabled属性
+    // 如果设置pagingEnabled属性
     if(isPagingEnabled) {
       const nodeArray = []
        node.children.forEach((node) => {
@@ -2725,21 +2718,21 @@ function parsePagingEnabledNode(node){
 
 #### **主要功能**
 
-registerGesttrue.js文件主要是用于实现weex不支持组件及属性，由于weex不支持的组件属性需要由gesture-loader.js扫描并交由自定义方法执行回调，所以此文件主要是实现组件属性或事件的集合。
+registerGesture.js文件主要是用于实现Weex不支持组件及属性，由于Weex不支持的组件属性需要由gesture-loader.js扫描并交由自定义方法执行回调，所以此文件主要是实现组件属性或事件的集合。
 
 支持如下事件或属性：
 
 - 通用事件
 
-weex通用事件longpress、appear、disappear、viewAppear、viewDisappear 的实现
+Weex通用事件longpress、appear、disappear、viewAppear、viewDisappear 的实现
 
 - 手势事件
 
-weex手势事件touchstart、touchmove、touchend、stopPropagation、panstart、panstart、panend、horizontalpan、verticalpan、swipe、LongPress的实现
+Weex手势事件touchstart、touchmove、touchend、stopPropagation、panstart、panstart、panend、horizontalpan、verticalpan、swipe、LongPress的实现
 
 - 组件属性
 
-weex组件list的paging-enabled、show-scrollbar等属性的实现
+Weex组件list的paging-enabled、show-scrollbar等属性的实现
 
 #### **使用说明**
 
@@ -2768,9 +2761,9 @@ const gestureMap = new Map([
 ])
 ```
 
-注意：其中组件属性名或事件名需要和gesture-loader.js中检测指定名一致， 组件属性名或事件名的实现方法需要保持与weex官方文档中的效果以及回调保持一致。
+注意：其中组件属性名或事件名需要和gesture-loader.js中检测指定名一致， 组件属性名或事件名的实现方法需要保持与Weex官方文档中的效果以及回调保持一致。
 
-2. 要注意gesture-loader.js和register Gesttrue.js的映射关系，weex_harmongy_registerGesture在被调用时传入的参数为gesture-loader文件中取得的，所以保险起见在register Gesttrue文件中去自定义实现方法的时候要清楚函数得到的参数内容
+2. 要注意gesture-loader.js和registerGesture.js的映射关系，weex_harmongy_registerGesture在被调用时传入的参数为gesture-loader文件中取得的，所以保险起见在registerGesture文件中去自定义实现方法的时候要清楚函数得到的参数内容
 
 ```javascript
 /**
@@ -2910,6 +2903,89 @@ let eventOrAttrsMap = []
 ```
 
 如果涉及到参数传递并且gettrueAPI中传递的参数不满足，则需要在gesture-loader文件中获取并放入eventOrAttrsMap中，具体如何获取和添加可参考gesture-loader的说明
+
+### virtual-loader.js
+
+#### 主要功能
+
+virtual-loader.js插件主要用于为weex的list组件增加虚拟列表功能，防止list组件在渲染数据较多时出现卡顿丢帧等性能问题，通过`virtual`属性值为true或false开启虚拟列表功能。
+
+#### 使用说明
+
+##### 1. 添加virtual-loader插件
+
+自行将virtual-loader.js插件放入configs文件夹中，并在webpack.common.conf.js打包配置文件中添加到.vue文件的处理loader中使用。
+
+```js
+ {
+        test: /\.vue(\?[^?]+)?$/,
+        use: [{
+          loader: 'vue-loader',
+          options: {
+            postcss: [require('autoprefixer')({ browsers: ['last 10 Chrome versions', 'last 5 Firefox versions', 'Safari >= 6', 'ie > 8'] })],
+            compilerOptions: {
+              modules: [
+                {
+                  postTransformNode: el => {
+                    // to convert vnode for weex components.
+                    require('weex-vue-precompiler')()(el)
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          loader: path.resolve(__dirname, 'gesture-loader.js'),
+        },
+        {
+            loader: path.resolve(__dirname, 'transform-loader.js'),
+        },
+        {
+          // 添加到此处
+          loader: path.resolve(__dirname, 'virtual-loader.js'),  
+        }
+        ],
+        exclude: config.excludeModuleReg
+      }
+```
+
+
+
+##### 2. 业务代码中使用
+
+`virtual="true"`为是否使用虚拟列表的开启标识。`@scroll`事件无论是否使用都必须包含，可以是用户自己定义也可以是空方法。`estimatedItemSize="100"`该属性为列表项预估高度，默认为100。`bufferScale="1"`该属性为缓冲区比例，默认值为1。在list组件中必须要有两个`div`盒子包裹列表项内容，其外层`div`必须有`ref="list"`属性，内层`div`必须有`ref="content"`属性。
+
+```vue
+<template>
+  <list
+    class="list-wrap"
+    virtual="true"
+    @scroll="onScroll"
+    estimatedItemSize="100"
+    bufferScale="1"
+  >
+    <div ref="list">
+      <div ref="content">
+        <cell
+          class="list-cell"
+          v-for="item in originalData"
+          :key="item.id"
+          ref="items"
+          :style="{
+            height: (multiple ? item.height * multiple : item.height) + 'px',
+          }"
+        >
+          <text class="itemContent">{{ item.value }}</text>
+        </cell>
+      </div>
+    </div>
+  </list>
+</template>
+
+```
+
+
 
 ## 4.7 热更新
 
@@ -3305,15 +3381,103 @@ function getIPAdress() {
 
 ![image](./assets/Snipaste_2024-10-25_10-45-45.png)
 
+## 4.8 broadcastChannel桥接实现 
+
+### 4.8.1 介绍
+
+不同的 Weex 页面使用的是不同的执行环境，即使全局变量也是互相隔离的，然而使用 `BroadcastChannel` 是可以实现跨页面通信的。但是由于weex鸿蒙工程是多web实例，且`BroadcastChannel`无法传递对象方法，我们实现了一套native的跨页面信息同步的方法。
+
+### 4.8.2 API介绍及使用
+
+#### 4.8.2.1  channelPostMessage
+
+```js
+const callback = (val) => {
+    console.log("ChannelMessage singlePage1 callback", JSON.stringify(val));
+},
+const paramPost = {
+  type: "demo",
+  data: {
+      name: "singlePage1",
+      age: 18,
+  },
+};
+weexModule.callNative("channelPostMessage", paramPost, callback);
+```
+
+`channelPostMessage`用于在当前频道中广播消息
+
+参数解析：
+
+- type: 监听的频道名称，用来区分不同的频道（跨频道不可通信）
+- data:频道中传递的信息
+- callback: 调用runpostMessageCallback方法触发该callback，获取信息
+
+#### 4.8.2.2  channelOnMessage
+
+```js
+const paramOnMessage = {
+    type: "demo",
+};
+const callback = (val) => {
+    console.log(
+        "ChannelMessage entry singlePage1 callback !!!!",
+        JSON.stringify(val)
+    );
+};
+weexModule.callNative("channelOnMessage", paramOnMessage, callback);
+```
+
+`channelOnMessage`用于监听频道中的广播信息
+
+参数解析：
+
+- type: 监听的频道名称，用来区分不同的频道（跨频道不可通信）
+- callback:消息事件的处理函数。在频道中接收到广播消息之后，会给所有订阅者派发消息事件
+
+#### 4.8.2.3  runpostMessageCallback
+
+```js
+let paramCallback = {
+    type: "demo",
+    params: {
+        name: "singlePage1",
+        age: 21,
+    },
+};
+weexModule.callNative("runpostMessageCallback", paramCallback);
+```
+
+`runpostMessageCallback`用于触发`channelOnMessage`中的callback回调方法，向发送广播的页面传递数据。
+
+参数解析：
+
+- type: 监听的频道名称，用来区分不同的频道（跨频道不可通信）
+- params:`channelOnMessage`中的callback回调方法所接受的参数信息
+
+#### 4.8.2.4  channelCloseMessage
+
+```js
+const paramClose = {
+    type: "demo",
+};
+weexModule.callNative("channelCloseMessage", paramClose);
+```
+
+`channelCloseMessage`用于关闭当前频道。
+
+参数解析：
+
+- type: 监听的频道名称，用来区分不同的频道（跨频道不可通信）
 
 # 五、性能调优
 
-## 5.1 jsb 异步
+## 5.1 JSBridge异步
 
 ### 5.1.1 原理介绍
 
 异步JSBridge调用适用于H5侧调用原生或C++侧注册的JSBridge函数场景下，将用户指定的JSBridge接口的调用抛出后，不等待执行结果， 以避免在ArkUI主线程负载重时JSBridge同步调用可能导致Web线程等待IPC时间过长，从而造成阻塞的问题。
-this.controller.registerJavaScriptProxy(this.webAdapter,"webAdapter",["run"],["asyncRun"]); 第四个参数 asyncRun 提供了异步调用能力。
+this.controller.registerJavaScriptProxy(this.webAdapter,"webAdapter",["run"],["asyncRun"]); 第四个参数asyncRun提供了异步调用能力。
 
 ### 5.1.2 桥接思路
 
@@ -3321,9 +3485,9 @@ this.controller.registerJavaScriptProxy(this.webAdapter,"webAdapter",["run"],["a
 
 ```ts
 let weexModule = {
-  name: "weex扩展API",
+  name: "Weex扩展API",
   // 默认走同步
-  // isAsync: 是否异步方式调用 native api
+  // isAsync: 是否异步方式调用native api
   callNative: function (name, paramObj, callback, isAsync = false) {
     // @ts-ignore
     native.run(name, paramObj, callback, isAsync);
@@ -3346,9 +3510,9 @@ weexModule.callNative('getNetworkInfo', params, this.callback, isAsync=True);
 
 ### 5.2.2 接口和使用方法
 
-提供了 `CodeCacheController` 接口，需实现其中的注册自定义协议方法 `getScheme` 和通过 url 获取文件内容的方法 `getResponseSettings`。
+提供了 `CodeCacheController` 接口，需实现其中的注册自定义协议方法 `getScheme` 和通过url获取文件内容的方法 `getResponseSettings`。
 
-例如下面的例子，注册了一个名为 `scheme1` 的自定义协议，并将以此为开头的 url 进行拦截：
+例如下面的例子，注册了一个名为 `scheme1` 的自定义协议，并将以此为开头的url进行拦截：
 
 ```typescript
 import {
@@ -3427,12 +3591,53 @@ ExtWebController.preRenderUrls([
 - 当在原生首页停留时间比较长，预渲染完全准备完毕时，跳转到华为商城主页秒开。
 - 当在原生页面停留时间较短，预渲染可能还没结束，跳转到华为商城主页时有loading等待过程。
   
+## 5.4 长列表优化
 
+### 5.4.1 说明
+
+长列表优化就是在针对于大量列表数据页面渲染时可能引起画面卡顿，请求时长缓慢等问题所做的优化手段，在使用长列表优化功能之后，将会对长列表数据做自定义分组，将自定义数量的数据项分为一组在页面渲染，将整个长列表数据分割成小块来渲染，缓解页面数据请求过多带来的卡顿，从而进行长列表数据渲染场景优化。
+
+### 5.4.2 接口与使用
+
+提供两个新属性，在长列表渲染场景下使用
+| 属性名 | 类型   | 说明                |
+| ---- | ------ | --------------------- |
+| v-grouping-child-elements       | number | 自定义分组元素项  |
+| v-grouping-child-ignore | boolean   | 是否忽略分组 |
+```html
+<template>
+  <div>
+    <list class="list-wrap" v-grouping-child-elements="5">
+      <div>
+        <cell class="list-cell" v-for="(item, smart_index) in lists" :key="item">
+          <text class="item" @click="onstart(item, smart_index)">{{
+            `${item}--${smart_index}`
+          }}</text>
+        </cell>
+      </div>
+      <div>
+        <cell class="list-cell" v-for="(item, big_index) in lists_fork" :key="item" v-grouping-child-ignore="true">
+          <text class="item" @click="onstart(item, big_index)">{{
+            `${item}--${big_index}`
+          }}</text>
+        </cell>
+      </div>
+    </list>
+  </div>
+</template>
+```
+
+### 5.4.3 长列表分组效果
+
+- 不使用分组功能
+![image](./assets/Snipaste_2024-11-22_15-43-56.png)
+- 使用了分组功能
+![image](./assets/Snipaste_2024-11-22_15-37-29.png)
 # 六、调试测试
 
 ## 1. 原生侧调试
 
-原生侧调试请参考DevEco Studio 应用/服务调试： [https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-debug-app-0000001053702413](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-debug-app-0000001053702413)
+原生侧调试请参考DevEco Studio应用/服务调试： [https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-debug-app-0000001053702413](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-debug-app-0000001053702413)
 
 ## 2. Web侧调试
 
@@ -3466,7 +3671,7 @@ web侧调试使用chrome的调试工具进行调试，可参考：[https://gitee
 
 ![image](./assets/f0453475-e095-4049-b2f0-eae3fd4c0f3c.png)
 
-3、install sign info inconsistent 签名不一致
+3、install sign info inconsistent签名不一致
 
 原因：手机上安装同名不同工程打出来的包
 
@@ -3474,13 +3679,21 @@ web侧调试使用chrome的调试工具进行调试，可参考：[https://gitee
 
 ![image](./assets/175bef82-f6f8-4bb8-a49c-d6434ffab488.png)
 
-4、Invalid project path 项目路径无效
+4、Invalid project path项目路径无效
 
-原因: 项目中包含中文路径,导致工程不能运行
+原因: 项目中包含中文路径，导致工程不能运行。
 
-解决方案: 去除项目中中文路径,使用英文路径命名
+解决方案: 去除项目中中文路径，使用英文路径命名。
 
 ![image](./assets/cc03849e-a55f-4952-afa4-6e757b35eab6.png)
+
+5、Web组件中内嵌网络地址时跳转报跨域访问问题
+
+原因：内置组件规格导致不能跨域访问线上第三方网页.
+
+解决办法：使用同层渲染Web组件，加载本地页面需做地址转换。
+
+![image](./assets/Snipaste_2024-11-22_10-12-51.png)
 
 # 九、常见开发场景
 
@@ -3492,7 +3705,7 @@ web侧调试使用chrome的调试工具进行调试，可参考：[https://gitee
 
 #### 解决方案
 
-使用 Weex 的 `<template>` 和 `<script>` 标签定义组件。例如：
+使用Weex的 `<template>` 和 `<script>` 标签定义组件。例如：
 
 ```vue
 <template>
@@ -3548,7 +3761,7 @@ fetch('https://api.example.com/data')
 
 #### 解决方案
 
-使用 Weex 提供的Navigator API
+使用Weex提供的Navigator API
 
 ```javascript
 navigator.push({
@@ -3567,7 +3780,7 @@ navigator.push({
 
 #### 解决方案
 
-通过 CSS 或者 Weex 内置的样式来实现：
+通过CSS或者Weex内置的样式来实现：
 
 ```css
 .title {
@@ -3583,7 +3796,7 @@ navigator.push({
 
 #### 解决方案
 
-weex项目编译成Web项目时，px单位都转成了rem相对单位，所以我们可以通过修改页面根元素html的font-size的值来跟随折叠屏的折叠/展开动作，在weex项目 **weex.init(Vue);** 之前加入下面代码：
+Weex项目编译成Web项目时，px单位都转成了rem相对单位，所以我们可以通过修改页面根元素html的font-size的值来跟随折叠屏的折叠/展开动作，在Weex项目 **weex.init(Vue);** 之前加入下面代码：
 
 ```javascript
 function setRootFont () {
@@ -3602,7 +3815,7 @@ window.addEventListener('resize', setRootFont)
 
 高阶API扩展包：AdvancedAPI_OHOS
 
-鸿蒙化指导文档：docs
+指导文档：docs
 
 样例工程：example
 
@@ -3610,14 +3823,13 @@ window.addEventListener('resize', setRootFont)
 
 web高阶API扩展包：web_api_ohos
 
-鸿蒙化集成模块：web_scenekit_hsp
+集成模块：web_scenekit_hsp
 
-鸿蒙化拓展插件包：weex-openharmony
+拓展插件包：weex-openharmony
 
 # 十一、附录
 
-### [weex官方文档](https://weexapp.com/zh/docs/api/weex-variable.html)
+### [Weex官方文档](https://weexapp.com/zh/docs/api/weex-variable.html)
 
 ### [bindingx使用方法](https://alibaba.github.io/bindingx/guide/cn_introduce)
-
 

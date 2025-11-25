@@ -7,8 +7,7 @@ const pointAnnotations = {
       lng: '116.176010',
       height: '30',
       width: '130',
-      image: 'http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK',
-      // 'http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK',
+      image: 'https://www.iconfont.cn/wanxiang',
       params: {
         sessionParams: '',
         weexParams: {
@@ -16,11 +15,11 @@ const pointAnnotations = {
           commonJsEntry: 'frameworkTest/pages/commons.js',
           serviceName: '1',
           webUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest_web/pages/label/entry.html',
+            '',
           weexId: 'ume_1eee58809591478896ac1c07df62372c',
           weexName: 'frameworkTest',
           weexUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest.wume',
+            '',
         },
       },
     },
@@ -30,8 +29,7 @@ const pointAnnotations = {
       lng: '116.320000',
       height: '30',
       width: '130',
-      image: 'http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK',
-      // 'http://oss.umetrip.com/fs/serviceRecommend/static/203,29de8f042d91f3e4',
+      image: 'https://www.iconfont.cn/wanxiang',
       params: {
         sessionParams: '',
         weexParams: {
@@ -39,11 +37,11 @@ const pointAnnotations = {
           commonJsEntry: 'frameworkTest/pages/commons.js',
           serviceName: '1',
           webUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest_web/pages/label/entry.html',
+            '',
           weexId: 'ume_1eee58809591478896ac1c07df62372c',
           weexName: 'frameworkTest',
           weexUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest.wume',
+            '',
         },
       },
     },
@@ -57,8 +55,7 @@ const pointAnnotations1 = {
       lng: '116.720000',
       height: '30',
       width: '130',
-      image: 'http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK',
-      // 'http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK',
+      image: 'https://www.iconfont.cn/wanxiang',
       params: {
         sessionParams: '',
         weexParams: {
@@ -66,11 +63,11 @@ const pointAnnotations1 = {
           commonJsEntry: 'frameworkTest/pages/commons.js',
           serviceName: '1',
           webUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest_web/pages/label/entry.html',
+            '',
           weexId: 'ume_1eee58809591478896ac1c07df62372c',
           weexName: 'frameworkTest',
           weexUrl:
-            'http://static-gray.umetrip.com/weex/frameworkTest/frameworkTest.wume',
+            '',
         },
       },
     },

@@ -75,7 +75,7 @@
         var $QR = document.querySelector('#qrcode')
         var QR = qrcode(0, 'L')
         // url += `${wsport ? `?wsport=${wsport}&`: '?'}_wx_tpl=${url}&weexid=${weexid}`
-        // url = 'http://gray.umetrip.com/weex/pages/test/entry.js'
+        // url = 'http://gray.test.com/weex/pages/test/entry.js'
         $QR.setAttribute('href', url)
         QR.addData(json)
         QR.make()

@@ -149,7 +149,6 @@ const webConfig = {
         // webconfig&weexConfig rules 加入这个配置。指定的包编译为commonjs规范
       {
         test:[/node_modules\/crypto-js/,/node_modules\/weex-bindingx/,
-          /node_modules\/@umetrip\/jsapi_weex/,
           /node_modules\/weex-vue-render/,],
         use: [{
           loader: 'babel-loader',
@@ -259,7 +258,6 @@ const harmonyConfig = {
         // webconfig&weexConfig rules 加入这个配置。指定的包编译为commonjs规范
       {
         test:[/node_modules\/crypto-js/,/node_modules\/weex-bindingx/,
-          /node_modules\/@umetrip\/jsapi_weex/,
           /node_modules\/weex-vue-render/,],
         use: [{
           loader: 'babel-loader',
@@ -378,7 +376,6 @@ const weexConfig = {
       // webconfig&weexConfig rules 加入这个配置。指定的包编译为commonjs规范
       {
         test: [/node_modules\/crypto-js/,/node_modules\/weex-bindingx/,
-          /node_modules\/@umetrip\/jsapi_weex/,
           /node_modules\/weex-vue-render/,],
         use: [{
           loader: 'babel-loader',
@@ -393,7 +390,6 @@ const weexConfig = {
       },
       {
         test:[/node_modules\/crypto-js/,/node_modules\/weex-bindingx/,
-          /node_modules\/@umetrip\/jsapi_weex/,
           /node_modules\/weex-vue-render/,],
         use: [{
           loader: 'babel-loader',

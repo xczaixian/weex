@@ -138,7 +138,7 @@ export function jumpTo(pageId, params = {}) {
 }
 
 const stream = weex.requireModule('stream');
-const urlBase = 'https://www.umetrip.com/gateway/api/web/';
+const urlBase = 'http://localhost:8080/gateway/api/web/';
 export function fetch(
   method,
   path,

@@ -26,13 +26,13 @@ export class MediaAPI {
       if (data['errMsg'].indexOf(':ok') > 0) {
         errCode = StatusCode.SUCCESS;
       }
-      completeCb(new WeexResult<void>(errCode, data['errMsg']));
+      completeCb(new WeexResult<void>(errCode, data['errMsg'], data['path']));
     };
 
     let params: Array<MediaCallback> = new Array();
     params[0] = new MediaCallback();
     params[0].complete = completeCB;
-    params[0].filePath = args['filePath'] ?? '';
+    params[0].filePath = JSON.parse(args).filePath ?? '';
     as[name].apply(null, params);
   }
 

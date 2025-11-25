@@ -6,7 +6,7 @@
         v-if="rightBtnNum == 1"
         class="right_btn icon"
         :style="{ top: statusbarHeight }"
-        src="http://img.umetrip.com/v1/tfs/T1QdhQBXKg1RCvBVdK"
+        src="../../../images/publishfasong-fenxiang.png"
         @click="commonShare"
       />
       <div
@@ -76,7 +76,7 @@
                 this.callback(res);
               })
             "
-            >分享(微博/wx好友/wx朋友圈/qq/航旅圈/存图-图)</text
+            >分享(微博/wx好友/wx朋友圈/qq/圈子/存图-图)</text
           >
           <text
             class="btn"
@@ -174,7 +174,7 @@
                 this.callback(res);
               })
             "
-            >分享(微博/wx好友/wx朋友圈/qq/航旅圈/存图-图-Toast:false)</text
+            >分享(微博/wx好友/wx朋友圈/qq/圈子/存图-图-Toast:false)</text
           >
           <text
             class="btn"
@@ -183,7 +183,7 @@
                 this.callback(res);
               })
             "
-            >分享(微博/wx好友/wx朋友圈/qq/航旅圈/存图-图-Toast:true)</text
+            >分享(微博/wx好友/wx朋友圈/qq/圈子/存图-图-Toast:true)</text
           >
           <!-- <text class="btn" @click="openMiniPro"
             >拉起微信小程序(jumpNative-500501)</text
@@ -551,7 +551,7 @@
               ></image>
               <image
                 v-if="showImage == 2"
-                src="http://img.umetrip.com/jboss/UmeImageMagic/api/fileSystem/getFileByFid/44,0226cec379724288?module=serviceRecommend"
+                src="https://img0.baidu.com/it/u=2290894967,2752394478&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"
                 style="width: 100px; height: 100px"
               ></image>
             </div>
@@ -788,12 +788,12 @@ export default {
           isDownloadImg: true,
           longImage: imgData,
         };
-        // 1-新浪微博；2-微信好友；3-微信朋友圈；4-QQ好友, 7-航旅圈
+        // 1-新浪微博；2-微信好友；3-微信朋友圈；4-QQ好友, 7-圈子
         if (extraPrams.sharedChannel === 7) {
           shareParam = {
             ...shareParam,
             snsShareParams:
-              '{    "targetPageId": "200201",   "source": "sns_airlineMap",     "parameter": {       "sessionParams": "source=sns_airlineMap",       "weexParams": {          "weexName": "UmeCircle",          "serviceName": "航旅圈子",          "jsBundleEntry": "UmeCircle/pages/public/entry.js",          "commonJsEntry": "UmeCircle/pages/commons.js",          "weexId": "ume_92cfb3ea90934cf8aa2a49743f6dbbc0",          "weexUrl": "http://static.umetrip.com/weex/UmeCircle/UmeCircle.wume",          "webUrl": "https://static.umetrip.com/weex/UmeCircle/UmeCircle_web/pages/public/entry.html"       }    } }',
+              '{    "targetPageId": "200201",   "source": "sns_airlineMap",     "parameter": {       "sessionParams": "source=sns_airlineMap",       "weexParams": {          "weexName": "UmeCircle",          "serviceName": "圈子",          "jsBundleEntry": "UmeCircle/pages/public/entry.js",          "commonJsEntry": "UmeCircle/pages/commons.js",          "weexId": "ume_92cfb3ea90934cf8aa2a49743f6dbbc0",          "weexUrl": "",          "webUrl": ""       }    } }',
           };
         }
         commonShare(shareParam).then((res) => {
@@ -1037,18 +1037,18 @@ export default {
             contInfo: {
               pageTitle: "打卡长征路，重温红色心", // 公共分享页的页面title
               contImg:
-                "http://img.umetrip.com/fs/entertain/static/136,0eadf5860020e7d2", // 公共分享页的展示内容图片链接
+                "https://img1.baidu.com/it/u=4145863722,3423856203&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800", // 公共分享页的展示内容图片链接
               btnImg:
-                "http://img.umetrip.com/fs/test/temp/156,16d5501d719dd165", // 公共分享页的按钮图片链接
+                "https://q9.itc.cn/q_70/images01/20250624/55128e13490a408eb41c51e49183d5ef.png", // 公共分享页的按钮图片链接
             },
             shareInfo: {
               title: "打卡长征路，重温红色心", // 分享小程序卡片的title
               imageUrl:
-                "http://img.umetrip.com/fs/test/temp/152,16d54d662658bbe3", // 分享小程序卡片的配图
+                "https://img1.baidu.com/it/u=707187312,1863764218&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800", // 分享小程序卡片的配图
               targetUrl: "/pages/web/index", // 分享小程序卡片的对应的小程序原生页，必填
               isH5: 1, // 分享小程序卡片对应的小程序页面是否需要嵌入H5
               H5Url:
-                "http://gray.umetrip.com/weex/frameworkTest/frameworkTest_web/pages/thirdApi/entry.html", // 嵌入的H5链接
+                "", // 嵌入的H5链接
             },
           },
         };
@@ -1211,8 +1211,8 @@ export default {
               weexId: "ume_3160c5b594714fb2a58b5f9bb4bf335e",
               weexName: "正在跳转",
               webUrl:
-                "https://gray.umetrip.com/weex/weexBase/weexBase_web/pages/webview/entry.html",
-              weexUrl: "https://gray.umetrip.com/weex/weexBase/weexBase.wume",
+                "",
+              weexUrl: "",
               jsBundleEntry: "weexBase/pages/webview/entry.js",
             },
           },
@@ -1417,7 +1417,7 @@ export default {
       if (isInWXMinProgram) {
         params = {
           H5Url:
-            "http://gray.umetrip.com/weex/frameworkTest/frameworkTest_web/pages/thirdApi/entry.html",
+            "",
           H5route: "",
           parameter: {},
         };

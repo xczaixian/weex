@@ -68,8 +68,8 @@ if (isWeb) {
       console.log('building miniProgram'); 
       isInWXMinProgram = true;
     }
-  } else if (/umetrip/i.test(platform.toLowerCase())) {
-    console.log('building umetrip'); 
+  } else if (/app/i.test(platform.toLowerCase())) {
+    console.log('building app'); 
     isInWeixin = false;
     isInUmeApp = true;
   } else {
@@ -237,7 +237,7 @@ export function findIndex(array, key, value) {
   const { env } = weex.config;
   await Countly.init({
     app_key: 'a1b1f05fdc665588300a49494a05be6110963b09',
-    url: 'https://analytics.umetrip.com/',
+    url: '',
     interval: 2000,
     // app_version: env.appVersion,
     app_version: env.weexVersion,
